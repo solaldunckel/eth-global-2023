@@ -7,14 +7,11 @@ import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum, zora } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
-const { chains, publicClient } = configureChains(
-  [mainnet, polygon, optimism, arbitrum, zora],
-  [publicProvider()]
-);
+const { chains, publicClient } = configureChains([mainnet], [publicProvider()]);
 
 const { connectors } = getDefaultWallets({
   appName: "My RainbowKit App",
-  projectId: "YOUR_PROJECT_ID",
+  projectId: "9ba00acac3ceed7f113b2fb42d10a58c",
   chains,
 });
 
