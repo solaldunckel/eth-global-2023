@@ -1,7 +1,5 @@
 import ChannelPost from "@/components/post/ChannelPost";
 import { mockDataChannels } from "@/mockData";
-import { MessageCircle, Clock4 } from "lucide-react";
-import Link from "next/link";
 
 export default function Page({ params }: { params: { id: string } }) {
   const channel = mockDataChannels.find((channel) => channel.id === params.id);
