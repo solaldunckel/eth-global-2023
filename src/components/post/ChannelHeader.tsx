@@ -3,12 +3,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { User } from "lucide-react";
 import { Channel } from "@/types";
+import { useChannel } from "@/hooks/useChannel";
 
 type ChannelHeaderProps = {
   channel: Channel;
 };
 
 const ChannelHeader: FC<ChannelHeaderProps> = ({ channel }) => {
+  console.log(channel.id);
+  const { data } = useChannel(channel.id);
+  console.log(data);
+
   return (
     <div className="flex flex-row items-center">
       <Avatar className="h-32 w-32 border border-slate-500">
@@ -24,11 +29,13 @@ const ChannelHeader: FC<ChannelHeaderProps> = ({ channel }) => {
           </Badge>
         </div>
 
-        <p className="text-xs font-light mr-8">{channel.query_description}</p>
+        <p className="text-xs font-light mr-8">{channel.description}</p>
 
         <div className="flex flex-row items-center mt-2">
           <User className="text-gray-500 mr-1 w-5 h-5" />
-          <p className="text-sm text-gray-500 font-medium">23 users</p>
+          <p className="text-sm text-gray-500 font-medium">
+            {data?.nb_users} users
+          </p>
         </div>
       </div>
     </div>

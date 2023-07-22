@@ -12,6 +12,7 @@ import { useChannel } from "@/hooks/useChannel";
 import { useXmtp } from "@/hooks/useXmtp";
 import { getTimeElapsed } from "@/lib/getTimeElapsed";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
 
 export default function Page({
   params,
@@ -35,12 +36,10 @@ export default function Page({
   const comments = wantedPost?.comments.sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   );
-  console.log(comments);
 
   const onSubmit = async (data: any) => {
     const posts = await xmtp?.conversations.list();
     const xmtpConv = posts?.find((postFromList) => {
-      console.log(postFromList.topic, "vs", wantedPost?.topic_id);
       return postFromList.topic === wantedPost?.topic_id;
     });
     xmtpConv?.send(data.message);
@@ -61,7 +60,10 @@ export default function Page({
             <span className="font-bold">
               {getTimeElapsed(wantedPost!.timestamp)}
             </span>{" "}
-            by <span className="font-bold">{wantedPost?.author_address}</span>
+            by{" "}
+            <span className="font-bold">
+              {wantedPost?.author.username ?? wantedPost?.author.address}
+            </span>
           </div>
         </div>
       </div>
@@ -88,10 +90,23 @@ export default function Page({
       <div className="flex flex-col mt-4">
         {comments?.map((comment, index) => (
           <div key={index} className="flex flex-row gap-2 p-4">
-            <div className="h-10 w-10 rounded-full bg-green-500"></div>
-            <div className="flex flex-col bg-[#171717] border border-gray-500/25 p-4 rounded-lg">
-              <div className="flex flex-row items-center">
-                <h1 className="font-bold text-sm">{comment.author_address}</h1>
+            {comment.author.profile_pic_url ? (
+              <Image
+                alt="profile picture"
+                src={comment.author.profile_pic_url}
+                width={40}
+                height={40}
+                unoptimized
+                className="h-10 w-10 rounded-full bg-green-500 object-cover"
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-green-500"></div>
+            )}
+            <div className="flex flex-col bg-[#171717] border  border-gray-500/25 p-4 rounded-lg">
+              <div className="flex flex-row items-center pb-2">
+                <h1 className="font-bold text-sm">
+                  {comment.author.username ?? comment.author.address}
+                </h1>
                 <p className="text-xs  text-gray-500 font-light">
                   <span className="px-2">{"•"}</span>
                   {getTimeElapsed(comment.timestamp)}
