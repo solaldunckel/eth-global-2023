@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Client, Conversation } from "@xmtp/xmtp-js";
 import { useEthersSigner } from "@/lib/utils";
 import { ethers } from "ethers";
+import { useGetNftHolders } from "@/hooks/useGetNftHolders";
 
 interface Session {
   address: string;
