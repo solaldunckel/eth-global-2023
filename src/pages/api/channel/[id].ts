@@ -13,6 +13,7 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
   const userAddress = session?.address;
+
   const rep = await prisma.channel.findUnique({
     where: {
       id: parseInt(req.query.id as string),
@@ -28,8 +29,26 @@ export default async function handler(
 
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string);
   const xmtp = await Client.create(signer, { env: "dev" });
+
   xmtp.enableGroupChat(); // TO DO : take off, only one time ?
   const convList = await xmtp.conversations.list();
+
+  // if (req.method === "POST") {
+  //   const parsed = JSON.parse(req.body);
+  //   const isAllowed = await prisma.allowed_address.findUnique({
+  //     where: {
+  //       channel_id_address: {
+  //         address: userAddress,
+  //         channel_id: rep.id,
+  //       },
+  //     },
+  //   });
+  //   if (!isAllowed) {
+  //     return res.status(401).json({ error: "Unauthorized" });
+  //   }
+
+  //   // TODO set as joined the db
+  // }
 
   const arr = await Promise.all(
     rep.posts.map(async (post) => {
@@ -42,9 +61,21 @@ export default async function handler(
         content: string;
       } | null;
       msg.shift();
-      return { ...post, ...decodedPost, comments: msg };
+
+      return {
+        ...post,
+        timestamp: msg[0].conversation.createdAt,
+        ...decodedPost,
+        comments: msg
+          .filter((msg) => msg.contentType.typeId === "text")
+          .map((comment) => ({
+            author_address: comment.senderAddress,
+            content: comment.content,
+            timestamp: comment.sent,
+          })),
+      };
     })
   );
 
-  return res.json(arr.filter(Boolean));
+  return res.json({ ...rep, posts: arr.filter(Boolean) });
 }

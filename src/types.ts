@@ -1,22 +1,26 @@
-export type Channel = {
+export interface Channel {
   id: string;
   name: string;
   category: string;
+  query: string;
   image_url?: string;
-  posts?: Post[];
-};
+  query_description: string;
+  posts: Post[];
+}
 
 export type Message = {
   // id: string;
-  authorId: string;
+  author_address: string;
   content: string;
-  timestamp: number;
+  timestamp: string;
 };
 
-export type Post = {
+export interface Post {
+  channel_id: number;
   topic_id: string;
+  author_address: string;
+  timestamp: string;
   title: string;
   content: string;
-  authorId: string;
-  messages: Message[];
-};
+  comments: Message[];
+}

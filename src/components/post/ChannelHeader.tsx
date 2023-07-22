@@ -24,12 +24,7 @@ const ChannelHeader: FC<ChannelHeaderProps> = ({ channel }) => {
           </Badge>
         </div>
 
-        <p className="text-xs font-light mr-8">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem optio
-          repellat ex mollitia veritatis itaque id quod numquam dignissimos
-          vitae cupiditate facere enim alias, reiciendis magnam tempore ullam
-          excepturi libero!
-        </p>
+        <p className="text-xs font-light mr-8">{channel.query_description}</p>
 
         <div className="flex flex-row items-center mt-2">
           <User className="text-gray-500 mr-1 w-5 h-5" />

@@ -1,10 +1,12 @@
+"use client";
+
 import ChannelPost from "@/components/post/ChannelPost";
-import { mockDataChannels } from "@/mockData";
+import { useChannel } from "@/hooks/useChannel";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const channel = mockDataChannels.find((channel) => channel.id === params.id);
-
-  if (!channel) {
+  // const channel = mockDataChannels.find((channel) => channel.id === params.id);
+  const { data } = useChannel(params.id);
+  if (!data) {
     return <div>Channel not found</div>;
   }
 
@@ -16,8 +18,8 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
 
       <div className="gap-4 flex flex-col">
-        {channel.posts?.map((post) => (
-          <ChannelPost key={post.id} post={post} channelId={channel.id} />
+        {data?.posts.map((post: any) => (
+          <ChannelPost key={post.id} post={post} channelId={post.channel_id} />
         ))}
       </div>
     </div>

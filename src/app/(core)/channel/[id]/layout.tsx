@@ -1,5 +1,7 @@
+"use client";
 import ChannelHeader from "@/components/post/ChannelHeader";
 import CreatePost from "@/components/post/CreatePost";
+import { useChannel } from "@/hooks/useChannel";
 import { mockDataChannels } from "@/mockData";
 
 export default function Layout({
@@ -9,19 +11,19 @@ export default function Layout({
   children: React.ReactNode;
   params: { id: string };
 }) {
-  const channel = mockDataChannels.find((channel) => channel.id === params.id);
+  const { data } = useChannel(params.id);
 
-  if (!channel) {
+  if (!data) {
     return <div>Channel not found</div>;
   }
 
   return (
     <div className="p-8">
       <div className="flex flex-row items-center justify-between">
-        <ChannelHeader channel={channel} />
+        <ChannelHeader channel={data} />
 
         <div className="w-64 flex justify-end">
-          <CreatePost channelId={channel.id} />
+          <CreatePost channelId={data.id} />
         </div>
       </div>
 

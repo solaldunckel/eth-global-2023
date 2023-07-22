@@ -46,6 +46,12 @@ export default async function handler(
     },
   });
 
+  const allowedList = await prisma.allowed_address.findMany({
+    where: {
+      channel_id: parsed.data.channelId,
+    },
+  });
+
   if (!isAllowed) {
     return res.status(401).json({ error: "Unauthorized" });
   }
@@ -53,8 +59,8 @@ export default async function handler(
   const xmtp = await getXmtpClient();
 
   const groupConversation = await xmtp.conversations.newGroupConversation([
-    signer.address, // TO DO : change in production
-    userAddress,
+    signer.address,
+    ...allowedList.map((allowed) => allowed.address),
   ]);
 
   const writeDb = await prisma.posts.create({
