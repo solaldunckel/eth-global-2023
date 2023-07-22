@@ -1,6 +1,7 @@
 "use client";
+
 import { Client } from "@xmtp/xmtp-js";
-import { createContext, use, useContext } from "react";
+import { createContext, useContext } from "react";
 
 export const XmtpContext = createContext<{
   xmtp: Client | undefined;
@@ -13,5 +14,6 @@ export function useXmtp() {
   if (!ctx) {
     throw new Error("useXmtp must be used within XmtpProvider");
   }
+
   return ctx;
 }

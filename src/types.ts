@@ -7,14 +7,14 @@ export type Channel = {
 };
 
 export type Message = {
-  id: string;
+  // id: string;
   authorId: string;
   content: string;
   timestamp: number;
 };
 
 export type Post = {
-  id: string;
+  topic_id: string;
   title: string;
   content: string;
   authorId: string;

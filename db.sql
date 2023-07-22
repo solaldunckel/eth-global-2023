@@ -17,14 +17,14 @@ CREATE TABLE IF NOT EXISTS channel (
 
 INSERT INTO channel (id, name, category, query, query_description) VALUES (1, 'curve_fi', 'OG', '{query : airstack}', 'this is the description' );
 
-CREATE TABLE IF NOT EXISTS topic (
+CREATE TABLE IF NOT EXISTS posts (
     channel_id INT NOT NULL,
     topic_id VARCHAR(100) PRIMARY KEY NOT NULL,
     author_address CHAR(42) NOT NULL,
 );
 
-INSERT INTO topic (channel_id, topic_id, author_address) VALUES (1, '0x2335Topic', '0x0abca868929aA10C67246135BD8940a1596663ed');
-INSERT INTO topic (channel_id, topic_id, author_address) VALUES (2, 'another545345vTopic', '0x0abca868929aA10C67246135BD8940a1596663ed');
+INSERT INTO posts (channel_id, topic_id, author_address) VALUES (1, '0x2335Topic', '0x0abca868929aA10C67246135BD8940a1596663ed');
+INSERT INTO posts (channel_id, topic_id, author_address) VALUES (2, 'another545345vTopic', '0x0abca868929aA10C67246135BD8940a1596663ed');
 
 
     -- FOREIGN KEY (channel_id) REFERENCES channel(id)

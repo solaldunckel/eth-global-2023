@@ -4,14 +4,11 @@ import type { FC } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +16,6 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -50,17 +46,17 @@ const mutationFn = async (values: FormValues & { channelId: string }) => {
 const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
   const { xmtp } = useXmtp();
 
+  console.log("XMTP", xmtp);
+
   const createPostMutation = useMutation({
     mutationFn,
     onSuccess: async (res, { channelId, title, content }) => {
       // here we can send the first message
-      const channels = await xmtp?.conversations.list();
-
-      channels?.forEach((channel) => {
-        if (channel.topic === res.topic) {
-          channel.send(JSON.stringify({ title: title, content: content }));
-        }
-      });
+      const posts = await xmtp?.conversations.list();
+      console.log(xmtp);
+      const topic = posts?.find((post) => post.topic === res.topic);
+      console.log(title, content, topic);
+      topic?.send(JSON.stringify({ title: title, content: content }));
     },
   });
 
