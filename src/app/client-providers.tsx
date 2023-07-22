@@ -9,13 +9,15 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum, zora } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
-import type { FC } from "react";
+import { useState, type FC, createContext } from "react";
 import {
   RainbowKitSiweNextAuthProvider,
   GetSiweMessageOptions,
 } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Client } from "@xmtp/xmtp-js";
+import { XmtpContext } from "@/hooks/useXmtp";
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
   statement: "Sign in to my RainbowKit app",
@@ -47,6 +49,8 @@ type AppPropsWithSession = AppProps &
 const queryClient = new QueryClient();
 
 const ClientProviders: FC<AppPropsWithSession> = ({ children }) => {
+  const [xmtp, setXmtp] = useState<Client | undefined>(undefined);
+
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig config={wagmiConfig}>
@@ -55,8 +59,10 @@ const ClientProviders: FC<AppPropsWithSession> = ({ children }) => {
             getSiweMessageOptions={getSiweMessageOptions}
           >
             <RainbowKitProvider chains={chains}>
-              {children}
-              <ReactQueryDevtools position="bottom-right" />
+              <XmtpContext.Provider value={{ xmtp, setXmtp }}>
+                {children}
+                <ReactQueryDevtools position="bottom-right" />
+              </XmtpContext.Provider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>
         </SessionProvider>
