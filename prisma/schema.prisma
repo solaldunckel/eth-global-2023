@@ -14,14 +14,8 @@ model channel {
   category          String            @db.VarChar(20)
   query             String            @db.VarChar(2500)
   query_description String            @db.VarChar(2500)
-  threads           threads[]
   allowed_address   allowed_address[]
-}
-
-model threads {
-  channel_id Int
-  topic      String  @id @db.VarChar(100)
-  channel    channel @relation(fields: [channel_id], references: [id])
+  topic             topic[]
 }
 
 model users {
@@ -36,4 +30,12 @@ model allowed_address {
   channel    channel @relation(fields: [channel_id], references: [id])
 
   @@id([channel_id, address])
+}
+
+model topic {
+  channel_id     Int
+  topic_id       String @id @db.VarChar(100)
+  author_address String @db.Char(42)
+
+  channel channel @relation(fields: [channel_id], references: [id])
 }
