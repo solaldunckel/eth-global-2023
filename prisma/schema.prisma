@@ -9,7 +9,7 @@ datasource db {
 }
 
 model channel {
-  id              Int               @id
+  id              Int               @id @default(autoincrement())
   name            String            @db.VarChar(20)
   category        String            @db.VarChar(20)
   image_url       String?           @db.VarChar(2083)
