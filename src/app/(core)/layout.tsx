@@ -26,23 +26,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       });
   };
 
-  if (!xmtp) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        {isLoading ? (
-          <Loader2 className="animate-spin" />
-        ) : (
-          <Button onClick={onClick}>Enable XMTP Identity</Button>
-        )}
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-row min-h-screen">
       <Sidebar />
 
-      <div className="grow overflow-scroll max-h-screen">{children}</div>
+      <div className="grow overflow-scroll max-h-screen">
+        {xmtp ? (
+          children
+        ) : (
+          <div className="min-h-screen flex justify-center items-center">
+            {isLoading ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <Button onClick={onClick}>Enable XMTP Identity</Button>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

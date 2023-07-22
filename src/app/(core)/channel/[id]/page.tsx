@@ -19,12 +19,8 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
 
       <div className="gap-4 flex flex-col">
-        {data?.posts.map((post) => (
-          <ChannelPost
-            key={post.channel_id}
-            post={post}
-            channelId={post.channel_id}
-          />
+        {data?.posts.map((post, idx) => (
+          <ChannelPost key={idx} post={post} channelId={post.channel_id} />
         ))}
       </div>
     </div>

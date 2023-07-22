@@ -1,5 +1,5 @@
 export interface Channel {
-  id: string;
+  id: number;
   name: string;
   category: string;
   query: string;

@@ -9,8 +9,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useChannel } from "@/hooks/useChannel";
+import { useConversation } from "@/hooks/useConversation";
 import { useXmtp } from "@/hooks/useXmtp";
 import { getTimeElapsed } from "@/lib/getTimeElapsed";
+import { Channel } from "@/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 export default function Page({
@@ -21,10 +25,19 @@ export default function Page({
   const { data } = useChannel(params.id);
   const { xmtp } = useXmtp();
   const decoded = decodeURIComponent(params.topicId);
+  const { data: conversations } = useConversation();
 
   const wantedPost = data?.posts.find(
     (post) => post.topic_id.split("/")[3] === decoded
   );
+
+  const queryClient = useQueryClient();
+
+  const conversation = useMemo(() => {
+    return conversations?.find((conv) => {
+      return conv.topic.split("/")[3] === decoded;
+    });
+  }, [conversations, decoded]);
 
   const form = useForm({
     defaultValues: {
@@ -32,21 +45,56 @@ export default function Page({
     },
   });
 
-  const comments = wantedPost?.comments.sort(
-    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  const comments = useMemo(
+    () =>
+      wantedPost?.comments.sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      ),
+    [wantedPost?.comments]
   );
-  console.log(comments);
 
   const onSubmit = async (data: any) => {
-    const posts = await xmtp?.conversations.list();
-    const xmtpConv = posts?.find((postFromList) => {
-      console.log(postFromList.topic, "vs", wantedPost?.topic_id);
-      return postFromList.topic === wantedPost?.topic_id;
-    });
-    xmtpConv?.send(data.message);
+    conversation?.send(data.message);
+    queryClient.setQueryData(
+      ["channel", params.id.toString()],
+      (old: Channel | undefined) => {
+        if (!old) return;
 
+        return {
+          ...old,
+          posts: old?.posts.map((post) => {
+            return {
+              ...post,
+              comments: post.comments.concat({
+                author_address: xmtp?.address!,
+                content: data.message,
+                timestamp: new Date().toISOString(),
+              }),
+            };
+          }),
+        };
+      }
+    );
+    queryClient.invalidateQueries(["channel", params.id.toString()]);
     form.reset();
   };
+
+  useEffect(() => {
+    if (!conversation || !xmtp) return;
+
+    async function init() {
+      for await (const message of await conversation!.streamMessages()) {
+        if (message.contentType.typeId !== "text") {
+          continue;
+        }
+
+        queryClient.invalidateQueries(["channel", params.id.toString()]);
+      }
+    }
+
+    init();
+  }, [conversation, xmtp]);
 
   return (
     <div className="flex flex-col mt-8">
