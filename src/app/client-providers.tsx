@@ -41,14 +41,9 @@ type ClientProvidersProps = {
   children?: React.ReactNode;
 };
 
-type AppPropsWithSession = AppProps &
-  ClientProvidersProps & {
-    session: Session;
-  };
-
 const queryClient = new QueryClient();
 
-const ClientProviders: FC<AppPropsWithSession> = ({ children }) => {
+const ClientProviders: FC<ClientProvidersProps> = ({ children }) => {
   const [xmtp, setXmtp] = useState<Client | undefined>(undefined);
 
   return (
