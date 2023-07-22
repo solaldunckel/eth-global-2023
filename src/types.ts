@@ -4,23 +4,23 @@ export interface Channel {
   category: string;
   query: string;
   image_url?: string;
-
   query_description: string;
   posts: Post[];
 }
 
 export type Message = {
   // id: string;
-  authorId: string;
+  author_address: string;
   content: string;
-  timestamp: number;
+  timestamp: string;
 };
 
 export interface Post {
   channel_id: number;
   topic_id: string;
   author_address: string;
+  timestamp: string;
   title: string;
   content: string;
-  comments: [];
+  comments: Message[];
 }

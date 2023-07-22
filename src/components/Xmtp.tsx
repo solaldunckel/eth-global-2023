@@ -27,9 +27,9 @@ export default function Xmtp() {
     setConversation(groupConversation);
   };
 
-  const sendMsg = () => {
-    conversation?.send("Hello world");
-  };
+  // const sendMsg = () => {
+  //   conversation?.send("Hello world");
+  // };
 
   const listChannel = async () => {
     const convList = await xmtp?.conversations.list();
@@ -60,9 +60,7 @@ export default function Xmtp() {
       <p>
         <button onClick={listChannel}>list channels</button>
       </p>
-      <p>
-        <button onClick={sendMsg}>Send message</button>
-      </p>
+      <p>{/* <button onClick={sendMsg}>Send message</button> */}</p>
     </div>
   );
 }

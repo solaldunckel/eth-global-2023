@@ -49,21 +49,26 @@ export default async function handler(
     },
   });
 
+  const allowedList = await prisma.allowed_address.findMany({
+    where: {
+      channel_id: parsed.data.channelId,
+    },
+  });
+
   if (!isAllowed) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
   console.log("isAllowed", isAllowed);
   console.log("userAddress", userAddress);
-  // now we can create the conversation in xmtp and return the id to the user so he can post the first message ()
   const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string);
   console.log("signer address", signer.address);
   const xmtp = await Client.create(signer, { env: "dev" });
-  xmtp.enableGroupChat(); // TO DO : take off, only one time ?
+  xmtp.enableGroupChat();
 
   const groupConversation = await xmtp.conversations.newGroupConversation([
-    signer.address, // TO DO : change in production
-    userAddress,
+    signer.address,
+    ...allowedList.map((allowed) => allowed.address),
   ]);
 
   const writeDb = await prisma.posts.create({
