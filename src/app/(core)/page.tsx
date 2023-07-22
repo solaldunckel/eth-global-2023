@@ -1,5 +1,5 @@
+import Xmtp from "@/components/Xmtp";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import Xmtp from "../components/Xmtp";
 
 export default function Home() {
   return (

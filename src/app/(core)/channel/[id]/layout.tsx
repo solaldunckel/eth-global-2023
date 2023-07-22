@@ -1,6 +1,6 @@
+import CreatePost from "@/components/post/CreatePost";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { mockDataChannels } from "@/mockData";
 import { User } from "lucide-react";
 
@@ -39,9 +39,9 @@ export default function Layout({
           </div>
         </div>
 
-        <Button variant="outline" className="ml-auto">
-          Create a Post
-        </Button>
+        <div className="ml-auto">
+          <CreatePost channelId={channel.id} />
+        </div>
       </div>
 
       {children}
