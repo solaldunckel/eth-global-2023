@@ -20,6 +20,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Session } from "next-auth";
 
 const schema = z.object({
   username: z.string().optional(),
@@ -28,11 +29,15 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const UpdateProfileForm: FC = () => {
+const UpdateProfileForm: FC<{ session: Session | null }> = ({ session }) => {
   const { update } = useSession();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      username: session?.user.username,
+      image: session?.user.image,
+    },
   });
 
   const closeDialog = () => {
@@ -63,9 +68,12 @@ const UpdateProfileForm: FC = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="@vitalik" {...field} />
-                </FormControl>
+                <div className="flex flex-row items-center">
+                  <div className="font-bold mr-2">@</div>
+                  <FormControl>
+                    <Input placeholder="@vitalik" {...field} />
+                  </FormControl>
+                </div>
                 <FormMessage />
               </FormItem>
             )}

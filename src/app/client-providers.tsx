@@ -1,13 +1,11 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { Session } from "next-auth";
-import type { AppProps } from "next/app";
 import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum, zora } from "wagmi/chains";
+import { mainnet } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { useState, type FC, createContext } from "react";
 import {

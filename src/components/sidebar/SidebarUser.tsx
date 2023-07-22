@@ -15,9 +15,22 @@ import {
 import { LogOut, User } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import UpdateProfileForm from "./UpdateProfileForm";
+import { Skeleton } from "../ui/skeleton";
 
 const SidebarUser: FC = () => {
-  const { data: session, update } = useSession();
+  const { data: session, update, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <div className="flex flex-row items-center">
+        <Skeleton className="h-10 w-10 rounded-full mr-2" />
+        <div className="flex flex-col text-start gap-2">
+          <Skeleton className="h-4 w-32 rounded" />
+          <Skeleton className="h-3 w-20 rounded" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Dialog>
@@ -63,7 +76,7 @@ const SidebarUser: FC = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <UpdateProfileForm />
+      {session && <UpdateProfileForm session={session} />}
     </Dialog>
   );
 };

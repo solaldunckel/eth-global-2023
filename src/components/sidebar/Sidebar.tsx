@@ -30,7 +30,7 @@ const SidebarChannelButton: FC<SidebarChannelButtonProps> = ({ channel }) => {
 
 const Sidebar: FC = () => {
   return (
-    <div className="w-72 p-4 flex flex-col gap-4 border-r-2 border-gray-500/10 h-screen">
+    <div className="min-w-[300px] p-4 flex flex-col gap-4 border-r-2 border-gray-500/10 h-screen">
       <div className="grow flex flex-col gap-4">
         <div className="h-24 border border-white ">company logo</div>
         <Button variant="outline" asChild>
