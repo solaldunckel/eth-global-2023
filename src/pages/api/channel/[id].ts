@@ -62,6 +62,17 @@ export default async function handler(
   const xmtp = await getXmtpClient(); // TO DO : take off, only one time ?
   const convList = await xmtp.conversations.list();
 
+  const allUsers = await prisma.users.findMany({});
+  const nb_users = await prisma.allowed_address.count({
+    where: {
+      channel_id: parseInt(req.query.id as string),
+      hasJoined: true,
+    },
+  });
+  if (!allUsers) {
+    return res.status(404).json({ error: "Not found" });
+  }
+
   const arr = await Promise.all(
     rep.posts.map(async (post) => {
       const conv = convList.find((conv) => post.topic_id === conv.topic);
@@ -72,25 +83,23 @@ export default async function handler(
 
       if (!msg || msg.length === 0) return null;
 
-      console.log(msg[0].content);
-
       const decodedPost = JSON.parse(msg[0].content) as {
         title: string;
         content: string;
       } | null;
 
-      console.log(decodedPost);
-
       const firstMsg = msg.shift();
-
       return {
         ...post,
+        author: allUsers.find((user) => user.address === post.author_address),
         timestamp: firstMsg?.conversation.createdAt,
         ...decodedPost,
         comments: msg
           .filter((msg) => msg.contentType.typeId === "text")
           .map((comment) => ({
-            author_address: comment.senderAddress,
+            author: allUsers.find(
+              (user) => user.address === comment.senderAddress
+            ),
             content: comment.content,
             timestamp: comment.sent,
           })),
@@ -98,5 +107,5 @@ export default async function handler(
     })
   );
 
-  return res.json({ ...rep, posts: arr.filter(Boolean) });
+  return res.json({ ...rep, nb_users, posts: arr.filter(Boolean) });
 }
