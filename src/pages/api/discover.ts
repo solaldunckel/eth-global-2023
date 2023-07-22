@@ -12,9 +12,30 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const channels = await prisma.channel.findMany();
+  const channels = await prisma.channel.findMany({
+    include: {
+      allowed_address: true,
+    },
+  });
 
-  // TODO: add a boolean if the user is allowed to join the channel
+  console.log(channels[0].allowed_address);
 
-  return res.json(channels);
+  const filtered = channels.map((channel) => {
+    const accessStatus = channel.allowed_address.find(
+      (el) => el.address === session.address
+    )?.hasJoined
+      ? "joined"
+      : channel.allowed_address.some(
+          (allowed) => allowed.address === session.address
+        )
+      ? "allowed"
+      : "denied";
+    return {
+      ...channel,
+      allowed_address: undefined,
+      accessStatus,
+    };
+  });
+
+  return res.json(filtered);
 }

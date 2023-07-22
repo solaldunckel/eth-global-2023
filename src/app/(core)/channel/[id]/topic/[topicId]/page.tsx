@@ -10,36 +10,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { useChannel } from "@/hooks/useChannel";
 import { useXmtp } from "@/hooks/useXmtp";
-import { mockDataChannels } from "@/mockData";
+import { getTimeElapsed } from "@/lib/getTimeElapsed";
 import { useForm } from "react-hook-form";
-
-function getTimeElapsed(timestamp: string): string {
-  const now = new Date();
-  const past = new Date(timestamp);
-
-  const timeElapsedInSeconds = Math.floor(
-    (now.getTime() - past.getTime()) / 1000
-  );
-
-  const months = Math.floor(timeElapsedInSeconds / (30 * 24 * 60 * 60));
-  const days = Math.floor(timeElapsedInSeconds / (24 * 60 * 60));
-  const hours = Math.floor(timeElapsedInSeconds / (60 * 60));
-  const minutes = Math.floor(timeElapsedInSeconds / 60);
-
-  if (months >= 1) {
-    return `${months} month${months > 1 ? "s" : ""} ago`;
-  } else if (days >= 1) {
-    return `${days} day${days > 1 ? "s" : ""} ago`;
-  } else if (hours >= 1) {
-    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-  } else if (minutes >= 1) {
-    return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-  } else {
-    return `${timeElapsedInSeconds} second${
-      timeElapsedInSeconds > 1 ? "s" : ""
-    } ago`;
-  }
-}
 
 export default function Page({
   params,
@@ -49,8 +21,7 @@ export default function Page({
   const { data } = useChannel(params.id);
   const { xmtp } = useXmtp();
   const decoded = decodeURIComponent(params.topicId);
-  console.log(decodeURIComponent(params.topicId));
-  console.log("decoded", decoded);
+
   const wantedPost = data?.posts.find(
     (post) => post.topic_id.split("/")[3] === decoded
   );
@@ -79,19 +50,23 @@ export default function Page({
 
   return (
     <div className="flex flex-col mt-8">
-      <div className="flex flex-row items-center text-start mt-1">
-        <div className="text-sm text-gray-500">
-          posted{" "}
-          <span className="font-bold">
-            {getTimeElapsed(wantedPost!.timestamp)}
-          </span>{" "}
-          by <span className="font-bold">{wantedPost?.author_address}</span>
+      <div className="flex flex-col bg-[#171717] rounded p-4 border border-gray-500/25">
+        <h1 className="text-2xl font-bold mt-1">{wantedPost?.title}</h1>
+        <div className="mt-4 text-sm" style={{ whiteSpace: "pre-line" }}>
+          {wantedPost?.content}
+        </div>
+        <div className="flex flex-row items-center text-start mt-4">
+          <div className="text-xs text-gray-500">
+            posted{" "}
+            <span className="font-bold">
+              {getTimeElapsed(wantedPost!.timestamp)}
+            </span>{" "}
+            by <span className="font-bold">{wantedPost?.author_address}</span>
+          </div>
         </div>
       </div>
-      <h1 className="text-4xl font-bold">{wantedPost?.title}</h1>
-      <div className="mt-4 ml-6">{wantedPost?.content}</div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-4">
           <FormField
             control={form.control}
             name="message"
@@ -99,7 +74,7 @@ export default function Page({
               <FormItem>
                 <FormControl>
                   <Input
-                    className="mx-4 mt-2"
+                    className="mt-2"
                     placeholder="Write a comment..."
                     {...field}
                   />
@@ -114,9 +89,9 @@ export default function Page({
         {comments?.map((comment, index) => (
           <div key={index} className="flex flex-row gap-2 p-4">
             <div className="h-10 w-10 rounded-full bg-green-500"></div>
-            <div className="flex flex-col">
+            <div className="flex flex-col bg-[#171717] border border-gray-500/25 p-4 rounded-lg">
               <div className="flex flex-row items-center">
-                <h1 className="font-bold text-lg">{comment.author_address}</h1>
+                <h1 className="font-bold text-sm">{comment.author_address}</h1>
                 <p className="text-xs  text-gray-500 font-light">
                   <span className="px-2">{"•"}</span>
                   {getTimeElapsed(comment.timestamp)}

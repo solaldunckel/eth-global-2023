@@ -6,6 +6,7 @@ import { useChannel } from "@/hooks/useChannel";
 export default function Page({ params }: { params: { id: string } }) {
   // const channel = mockDataChannels.find((channel) => channel.id === params.id);
   const { data } = useChannel(params.id);
+
   if (!data) {
     return <div>Channel not found</div>;
   }
@@ -18,8 +19,12 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
 
       <div className="gap-4 flex flex-col">
-        {data?.posts.map((post: any) => (
-          <ChannelPost key={post.id} post={post} channelId={post.channel_id} />
+        {data?.posts.map((post) => (
+          <ChannelPost
+            key={post.channel_id}
+            post={post}
+            channelId={post.channel_id}
+          />
         ))}
       </div>
     </div>

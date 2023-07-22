@@ -1,13 +1,8 @@
 import { getAuth } from "@/auth/getAuth";
-import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { getXmtpClient, signer } from "@/xmtp";
-interface Session {
-  address: string;
-}
-
-const prisma = new PrismaClient();
+import { prisma } from "@/db";
 
 const formSchema = z.object({
   channelId: z.coerce.number(),
@@ -18,13 +13,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   // verify that the user is authenticated
-  const session = (await getAuth(req, res)) as Session;
+  const session = await getAuth(req, res);
 
   if (!session) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-
-  console.log(req.body);
 
   // parse body
   const parsed = formSchema.safeParse(JSON.parse(req.body));
@@ -46,15 +39,15 @@ export default async function handler(
     },
   });
 
+  if (!isAllowed) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
   const allowedList = await prisma.allowed_address.findMany({
     where: {
       channel_id: parsed.data.channelId,
     },
   });
-
-  if (!isAllowed) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
 
   const xmtp = await getXmtpClient();
 
