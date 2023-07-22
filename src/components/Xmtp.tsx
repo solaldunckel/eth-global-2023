@@ -5,6 +5,7 @@ import * as React from "react";
 import { useEthersSigner } from "@/lib/utils";
 import { useXmtp } from "@/hooks/useXmtp";
 import { useGetNftHolders } from "@/hooks/useGetNftHolders";
+import { getToTransactions } from "@/lib/getToTransaction";
 
 const memberAddresses = [
   "0xD3fEb5B44A01DE6B91C33887F9e4021f61790D00",
@@ -12,6 +13,8 @@ const memberAddresses = [
   "0x0abca868929aA10C67246135BD8940a1596663ed",
   "0x76A02bB3d4E6fCb32643A9cA38569f1A959b9d2c",
 ];
+
+getToTransactions();
 
 export default function Xmtp() {
   const signer = useEthersSigner();
