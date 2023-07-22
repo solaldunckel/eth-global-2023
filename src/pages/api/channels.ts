@@ -1,8 +1,6 @@
 import { getAuth } from "@/auth/getAuth";
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
 
 interface Session {
   address: string;
@@ -22,7 +20,7 @@ export default async function handler(
     },
     select: {
       channel: {
-        select: { category: true, name: true, threads: true },
+        select: { category: true, name: true, topic: true },
       },
     },
   });

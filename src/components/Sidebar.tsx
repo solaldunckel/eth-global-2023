@@ -39,8 +39,8 @@ const Sidebar: FC = () => {
         <div className="flex flex-col">
           <h2 className="font-bold text-xl mb-2">My channels</h2>
           <div className="flex flex-col gap-2">
-            {mockDataChannels.map((channel) => (
-              <SidebarChannelButton channel={channel} />
+            {mockDataChannels.map((channel, index) => (
+              <SidebarChannelButton channel={channel} key={index} />
             ))}
           </div>
         </div>
