@@ -74,8 +74,6 @@ export const nextAuthOptions: NextAuthOptions = {
   callbacks: {
     // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
     async jwt({ token, trigger, session, user }) {
-      console.log("user", user, trigger, token);
-
       if (trigger === "signIn") {
         token.username = user.name;
         token.image = user.image;

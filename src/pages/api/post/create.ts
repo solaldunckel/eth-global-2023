@@ -2,11 +2,7 @@ import { getAuth } from "@/auth/getAuth";
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { Client, Conversation } from "@xmtp/xmtp-js";
-import { useEthersSigner } from "@/lib/utils";
-import { ethers } from "ethers";
-import { useGetNftHolders } from "@/hooks/useGetNftHolders";
-
+import { getXmtpClient, signer } from "@/xmtp";
 interface Session {
   address: string;
 }
@@ -14,7 +10,7 @@ interface Session {
 const prisma = new PrismaClient();
 
 const formSchema = z.object({
-  channelId: z.number(),
+  channelId: z.coerce.number(),
 });
 
 export default async function handler(
@@ -28,8 +24,10 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
 
+  console.log(req.body);
+
   // parse body
-  const parsed = formSchema.safeParse(req.body);
+  const parsed = formSchema.safeParse(JSON.parse(req.body));
 
   if (!parsed.success) {
     return res.status(400).json(parsed.error);
@@ -48,21 +46,35 @@ export default async function handler(
     },
   });
 
+  const allowedList = await prisma.allowed_address.findMany({
+    where: {
+      channel_id: parsed.data.channelId,
+    },
+  });
+
   if (!isAllowed) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  console.log("isAllowed", isAllowed);
-
-  // now we can create the conversation in xmtp and return the id to the user so he can post the first message ()
-  const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string);
-  const xmtp = await Client.create(signer, { env: "dev" });
-  xmtp.enableGroupChat(); // TO DO : take off, only one time ?
+  const xmtp = await getXmtpClient();
 
   const groupConversation = await xmtp.conversations.newGroupConversation([
-    signer.address, // TO DO : change in production
-    userAddress,
+    signer.address,
+    ...allowedList.map((allowed) => allowed.address),
   ]);
+
+  const writeDb = await prisma.posts.create({
+    data: {
+      channel: {
+        connect: {
+          id: parsed.data.channelId,
+        },
+      },
+      topic_id: groupConversation.topic,
+      author_address: userAddress,
+    },
+  });
+
   console.log("topic generated :", groupConversation.topic);
 
   return res.json({ topic: groupConversation.topic });

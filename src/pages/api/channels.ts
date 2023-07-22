@@ -1,5 +1,8 @@
 import { getAuth } from "@/auth/getAuth";
+import { Channel, Message, Post } from "@/types";
 import { PrismaClient } from "@prisma/client";
+import { Client } from "@xmtp/xmtp-js";
+import { ethers } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface Session {
@@ -19,11 +22,10 @@ export default async function handler(
       address: userAddress,
     },
     select: {
-      channel: {
-        select: { category: true, name: true, topic: true },
-      },
+      channel: true,
     },
   });
 
-  return res.json(rep.flatMap((x) => x.channel));
+  const arrayChannel = rep.flatMap((x) => x.channel);
+  return res.json(arrayChannel);
 }
