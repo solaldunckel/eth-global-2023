@@ -86,3 +86,12 @@ const openSea = [
   "0x1E0049783F008A0085193E00003D00cd54003c71",
   "0x00000000006CEE72100D161c57ADA5Bb2be1CA79",
 ];
+
+const protocols = {
+  opensea: openSea,
+  oneInch: oneInch,
+  convex: convex,
+};
+
+protocols["opensea"];
+export { protocols };

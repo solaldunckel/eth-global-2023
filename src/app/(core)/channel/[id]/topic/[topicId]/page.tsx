@@ -16,6 +16,8 @@ import { Channel } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 export default function Page({
   params,
@@ -45,6 +47,8 @@ export default function Page({
     },
   });
 
+  const { data: session } = useSession();
+
   const comments = useMemo(
     () =>
       wantedPost?.comments.sort(
@@ -67,7 +71,11 @@ export default function Page({
             return {
               ...post,
               comments: post.comments.concat({
-                author_address: xmtp?.address!,
+                author: {
+                  address: session?.address!,
+                  username: session?.user.username,
+                  profile_pic_url: session?.user.image,
+                },
                 content: data.message,
                 timestamp: new Date().toISOString(),
               }),
@@ -109,7 +117,10 @@ export default function Page({
             <span className="font-bold">
               {getTimeElapsed(wantedPost!.timestamp)}
             </span>{" "}
-            by <span className="font-bold">{wantedPost?.author_address}</span>
+            by{" "}
+            <span className="font-bold">
+              {wantedPost?.author.username ?? wantedPost?.author.address}
+            </span>
           </div>
         </div>
       </div>
@@ -136,10 +147,23 @@ export default function Page({
       <div className="flex flex-col mt-4">
         {comments?.map((comment, index) => (
           <div key={index} className="flex flex-row gap-2 p-4">
-            <div className="h-10 w-10 rounded-full bg-green-500"></div>
-            <div className="flex flex-col bg-[#171717] border border-gray-500/25 p-4 rounded-lg">
-              <div className="flex flex-row items-center">
-                <h1 className="font-bold text-sm">{comment.author_address}</h1>
+            {comment.author.profile_pic_url ? (
+              <Image
+                alt="profile picture"
+                src={comment.author.profile_pic_url}
+                width={40}
+                height={40}
+                unoptimized
+                className="h-10 w-10 rounded-full bg-green-500 object-cover"
+              />
+            ) : (
+              <div className="h-10 w-10 rounded-full bg-green-500"></div>
+            )}
+            <div className="flex flex-col bg-[#171717] border  border-gray-500/25 p-4 rounded-lg">
+              <div className="flex flex-row items-center pb-2">
+                <h1 className="font-bold text-sm">
+                  {comment.author.username ?? comment.author.address}
+                </h1>
                 <p className="text-xs  text-gray-500 font-light">
                   <span className="px-2">{"•"}</span>
                   {getTimeElapsed(comment.timestamp)}
