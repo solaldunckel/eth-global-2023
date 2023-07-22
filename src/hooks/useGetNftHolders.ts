@@ -1,6 +1,6 @@
 import { GetNftHoldersQuery } from "@/lib/queries";
 
-const apiKey = process.env.NEXT_PUBLIC_AIRSTACK_API_KEY as string;
+const apiKey = process.env.AIRSTACK_API_KEY as string;
 const API = "https://api.airstack.xyz/gql";
 
 type TokenBalance = { owner: { addresses: string[] } };
