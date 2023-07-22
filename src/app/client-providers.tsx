@@ -9,6 +9,7 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum, zora } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
+import { alchemyProvider } from "wagmi/providers/alchemy";
 import { useState, type FC, createContext } from "react";
 import {
   RainbowKitSiweNextAuthProvider,
@@ -20,10 +21,13 @@ import { Client } from "@xmtp/xmtp-js";
 import { XmtpContext } from "@/hooks/useXmtp";
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
-  statement: "Sign in to my RainbowKit app",
+  statement: "Sign in to Funnel app",
 });
 
-const { chains, publicClient } = configureChains([mainnet], [publicProvider()]);
+const { chains, publicClient } = configureChains(
+  [mainnet],
+  [alchemyProvider({ apiKey: "i25CEzZu6JD-2uH08tSkKRJKzGts26PE" })]
+);
 
 const { connectors } = getDefaultWallets({
   appName: "My RainbowKit App",

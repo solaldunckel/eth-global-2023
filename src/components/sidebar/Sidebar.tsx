@@ -14,9 +14,10 @@ type SidebarChannelButtonProps = {
 };
 
 const SidebarChannelButton: FC<SidebarChannelButtonProps> = ({ channel }) => {
+  console.log(channel);
   return (
     <Link
-      href={`/channel/${channel.channel_id}`}
+      href={`/channel/${channel.id}`}
       className="flex flex-row items-center hover:bg-white/20 rounded transition-all py-1 px-2 text-start"
     >
       <Avatar className="mr-2">
@@ -37,12 +38,12 @@ const fetchChannels = async () => {
 };
 
 const Sidebar: FC = () => {
-  // const { data } = useQuery({
-  //   queryKey: ["channels"],
-  //   queryFn: fetchChannels,
-  // }) as { data: Channel[] };
+  const { data } = useQuery({
+    queryKey: ["channels"],
+    queryFn: fetchChannels,
+  }) as { data: Channel[] };
 
-  const data = mockDataChannels;
+  // const data = mockDataChannels;
   return (
     <div className="w-72 p-4 flex flex-col gap-4 border-r-2 border-gray-500/10 h-screen">
       <div className="grow flex flex-col gap-4">

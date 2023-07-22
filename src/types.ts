@@ -1,5 +1,5 @@
 export type Channel = {
-  channel_id: string;
+  id: string;
   name: string;
   category: string;
   image_url?: string;
