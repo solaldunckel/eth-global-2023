@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { getXmtpClient, signer } from "@/xmtp";
-
 interface Session {
   address: string;
 }
