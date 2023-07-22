@@ -7,6 +7,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import SidebarUser from "./SidebarUser";
 import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "../ui/skeleton";
+import Image from "next/image";
+import FunnelLogo from "../../../public/funnel.png";
 
 type SidebarChannelButtonProps = {
   channel: Channel;
@@ -30,22 +33,36 @@ const SidebarChannelButton: FC<SidebarChannelButtonProps> = ({ channel }) => {
   );
 };
 
+const SidebarChannelButtonSkeleton: FC = () => {
+  return (
+    <div className="flex flex-row py-1 px-2">
+      <Skeleton className="rounded-full mr-2 h-10 w-10" />
+      <div className="flex flex-col">
+        <Skeleton className="h-4 w-20 mb-1" />
+        <Skeleton className="h-3 w-10" />
+      </div>
+    </div>
+  );
+};
+
 const fetchChannels = async () => {
   const res = await fetch("/api/channels");
   return res.json() as Promise<Channel[]>;
 };
 
 const Sidebar: FC = () => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["channels"],
     queryFn: fetchChannels,
   });
 
   // const data = mockDataChannels;
   return (
-    <div className="min-w-[300px] p-4 flex flex-col gap-4 border-r-2 border-gray-500/10 h-screen">
+    <div className="w-[300px] p-4 flex flex-col gap-4 border-r-2 border-gray-500/10 h-screen">
       <div className="grow flex flex-col gap-4">
-        <div className="h-24 border border-white ">company logo</div>
+        <div className="h-24 justify-center items-center flex">
+          <Image src={FunnelLogo} alt="logo" className="w-[256px]" />
+        </div>
         <Button variant="outline" asChild>
           <Link href="/">Discover</Link>
         </Button>
@@ -58,6 +75,7 @@ const Sidebar: FC = () => {
                 You have no channels yet
               </p>
             )}
+            {isLoading && <SidebarChannelButtonSkeleton />}
             {data?.map((channel, index) => (
               <SidebarChannelButton channel={channel} key={index} />
             ))}

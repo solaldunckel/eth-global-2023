@@ -1,21 +1,20 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
 import "@rainbow-me/rainbowkit/styles.css";
 
+import { SessionProvider } from "next-auth/react";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
 import { alchemyProvider } from "wagmi/providers/alchemy";
-import { useState, type FC, createContext } from "react";
+import { useState, type FC } from "react";
 import {
   RainbowKitSiweNextAuthProvider,
   GetSiweMessageOptions,
 } from "@rainbow-me/rainbowkit-siwe-next-auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { Client } from "@xmtp/xmtp-js";
+import type { Client } from "@xmtp/xmtp-js";
 import { XmtpContext } from "@/hooks/useXmtp";
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
