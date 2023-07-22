@@ -1,3 +1,5 @@
+"use client";
+
 import type { FC } from "react";
 import { Button } from "../ui/button";
 import { mockDataChannels, mockDataCurrentUser } from "@/mockData";
@@ -5,12 +7,14 @@ import { Channel } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import SidebarUser from "./SidebarUser";
+import { useQuery } from "@tanstack/react-query";
 
 type SidebarChannelButtonProps = {
   channel: Channel;
 };
 
 const SidebarChannelButton: FC<SidebarChannelButtonProps> = ({ channel }) => {
+  console.log(channel);
   return (
     <Link
       href={`/channel/${channel.id}`}
@@ -28,7 +32,18 @@ const SidebarChannelButton: FC<SidebarChannelButtonProps> = ({ channel }) => {
   );
 };
 
+const fetchChannels = async () => {
+  const res = await fetch("/api/channels");
+  return res.json();
+};
+
 const Sidebar: FC = () => {
+  const { data } = useQuery({
+    queryKey: ["channels"],
+    queryFn: fetchChannels,
+  }) as { data: Channel[] };
+
+  // const data = mockDataChannels;
   return (
     <div className="min-w-[300px] p-4 flex flex-col gap-4 border-r-2 border-gray-500/10 h-screen">
       <div className="grow flex flex-col gap-4">
@@ -40,8 +55,8 @@ const Sidebar: FC = () => {
         <div className="flex flex-col">
           <h2 className="font-bold text-xl mb-2">My channels</h2>
           <div className="flex flex-col gap-2">
-            {mockDataChannels.map((channel) => (
-              <SidebarChannelButton key={channel.id} channel={channel} />
+            {data?.map((channel, index) => (
+              <SidebarChannelButton channel={channel} key={index} />
             ))}
           </div>
         </div>

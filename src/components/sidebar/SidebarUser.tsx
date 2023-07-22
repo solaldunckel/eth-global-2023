@@ -1,6 +1,6 @@
 "use client";
 
-import type { FC } from "react";
+import { useEffect, type FC } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { mockDataCurrentUser } from "@/mockData";
 import { signOut, useSession } from "next-auth/react";
@@ -16,9 +16,21 @@ import { LogOut, User } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import UpdateProfileForm from "./UpdateProfileForm";
 import { Skeleton } from "../ui/skeleton";
+import { useXmtp } from "@/hooks/useXmtp";
+import { Client } from "@xmtp/xmtp-js";
+import { useEthersSigner } from "@/lib/utils";
 
 const SidebarUser: FC = () => {
   const { data: session, update, status } = useSession();
+  const signer = useEthersSigner();
+  const { setXmtp } = useXmtp();
+
+  useEffect(() => {
+    Client.create(signer!, { env: "production" }).then((xmtp) => {
+      // setXmtp(xmtp);
+      xmtp.enableGroupChat();
+    });
+  }, [setXmtp, signer]);
 
   if (status === "loading") {
     return (

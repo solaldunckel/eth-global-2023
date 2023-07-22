@@ -54,13 +54,11 @@ const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
     mutationFn,
     onSuccess: async (res, { channelId, title, content }) => {
       // here we can send the first message
-      const channels = await xmtp?.conversations.list();
-
-      channels?.forEach((channel) => {
-        if (channel.topic === res.topic) {
-          channel.send(JSON.stringify({ title: title, content: content }));
-        }
-      });
+      const posts = await xmtp?.conversations.list();
+      console.log(xmtp);
+      const topic = posts?.find((post) => post.topic === res.topic);
+      console.log(title, content, topic);
+      topic?.send(JSON.stringify({ title: title, content: content }));
     },
   });
 
