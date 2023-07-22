@@ -9,13 +9,14 @@ datasource db {
 }
 
 model channel {
-  id                Int               @id
-  name              String            @db.VarChar(20)
-  category          String            @db.VarChar(20)
-  query             String            @db.VarChar(2500)
-  query_description String            @db.VarChar(2500)
-  allowed_address   allowed_address[]
-  posts             posts[]
+  id              Int               @id
+  name            String            @db.VarChar(20)
+  category        String            @db.VarChar(20)
+  image_url       String?           @db.VarChar(2083)
+  query           String            @db.VarChar(2500)
+  description     String            @db.VarChar(2500)
+  allowed_address allowed_address[]
+  posts           posts[]
 }
 
 model users {
@@ -28,6 +29,7 @@ model allowed_address {
   channel_id Int
   address    String  @db.Char(42)
   channel    channel @relation(fields: [channel_id], references: [id])
+  hasJoined  Boolean @default(false)
 
   @@id([channel_id, address])
 }
