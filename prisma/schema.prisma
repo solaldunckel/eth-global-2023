@@ -8,27 +8,32 @@ datasource db {
   relationMode = "prisma"
 }
 
-model allowedAddress {
-  channel_id      Int
-  allowed_address String @db.Char(42)
-
-  @@id([channel_id, allowed_address])
-}
-
 model channel {
-  id       Int    @id
-  name     String @db.VarChar(20)
-  category String @db.VarChar(20)
-  query    String @db.VarChar(2500)
+  id                Int               @id
+  name              String            @db.VarChar(20)
+  category          String            @db.VarChar(20)
+  query             String            @db.VarChar(2500)
+  query_description String            @db.VarChar(2500)
+  threads           threads[]
+  allowed_address   allowed_address[]
 }
 
 model threads {
   channel_id Int
-  topic      String @id @db.VarChar(100)
+  topic      String  @id @db.VarChar(100)
+  channel    channel @relation(fields: [channel_id], references: [id])
 }
 
 model users {
   address         String  @id @db.Char(42)
   username        String? @db.VarChar(50)
   profile_pic_url String? @db.VarChar(2083)
+}
+
+model allowed_address {
+  channel_id Int
+  address    String  @db.Char(42)
+  channel    channel @relation(fields: [channel_id], references: [id])
+
+  @@id([channel_id, address])
 }
