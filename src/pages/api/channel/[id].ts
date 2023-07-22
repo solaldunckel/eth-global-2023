@@ -46,5 +46,5 @@ export default async function handler(
     })
   );
 
-  return res.json(arr.filter(Boolean));
+  return res.json({ ...rep, posts: arr.filter(Boolean) });
 }
