@@ -27,6 +27,7 @@ import {
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
 import { useMutation } from "@tanstack/react-query";
+import { useXmtp } from "@/hooks/useXmtp";
 
 type CreatePostProps = {
   channelId: string;
@@ -43,14 +44,23 @@ const mutationFn = async (values: FormValues & { channelId: string }) => {
   return fetch("/api/post/create", {
     method: "POST",
     body: JSON.stringify(values),
-  });
+  }).then((res) => res.json() as Promise<{ topic: string }>);
 };
 
 const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
+  const { xmtp } = useXmtp();
+
   const createPostMutation = useMutation({
     mutationFn,
-    onSuccess: (res, { channelId, title, content }) => {
+    onSuccess: async (res, { channelId, title, content }) => {
       // here we can send the first message
+      const channels = await xmtp?.conversations.list();
+
+      channels?.forEach((channel) => {
+        if (channel.topic === res.topic) {
+          channel.send(JSON.stringify({ title: title, content: content }));
+        }
+      });
     },
   });
 
