@@ -1,7 +1,7 @@
 import { users } from "@prisma/client";
 
 export interface Channel {
-  id: string;
+  id: number;
   name: string;
   category: string;
   query: string;
@@ -13,7 +13,6 @@ export interface Channel {
 
 export type Message = {
   // id: string;
-  author_address: string;
   author: User;
   content: string;
   timestamp: string;
@@ -32,6 +31,6 @@ export interface Post {
 
 export interface User {
   address: string;
-  username: string | null;
-  profile_pic_url: string | null;
+  username?: string | null;
+  profile_pic_url?: string | null;
 }

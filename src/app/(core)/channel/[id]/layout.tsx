@@ -1,8 +1,9 @@
 "use client";
+
 import ChannelHeader from "@/components/post/ChannelHeader";
 import CreatePost from "@/components/post/CreatePost";
 import { useChannel } from "@/hooks/useChannel";
-import { mockDataChannels } from "@/mockData";
+import { Loader2 } from "lucide-react";
 
 export default function Layout({
   children,
@@ -11,10 +12,23 @@ export default function Layout({
   children: React.ReactNode;
   params: { id: string };
 }) {
-  const { data } = useChannel(params.id);
+  const { data, isLoading } = useChannel(params.id);
 
+  console.log(data);
+
+  if (isLoading) {
+    return (
+      <div className="h-full w-full justify-center items-center flex">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
+  }
   if (!data) {
-    return <div>Channel not found</div>;
+    return (
+      <div className="h-full w-full justify-center items-center flex">
+        Channel not found
+      </div>
+    );
   }
 
   return (

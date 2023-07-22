@@ -22,11 +22,13 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useXmtp } from "@/hooks/useXmtp";
+import { useConversation } from "@/hooks/useConversation";
+import { Channel } from "@/types";
 
 type CreatePostProps = {
-  channelId: string;
+  channelId: number;
 };
 
 const schema = z.object({
@@ -36,7 +38,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const mutationFn = async (values: FormValues & { channelId: string }) => {
+const mutationFn = async (values: FormValues & { channelId: number }) => {
   return fetch("/api/post/create", {
     method: "POST",
     body: JSON.stringify(values),
@@ -44,19 +46,23 @@ const mutationFn = async (values: FormValues & { channelId: string }) => {
 };
 
 const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
-  const { xmtp } = useXmtp();
+  const { refetch } = useConversation();
 
-  console.log("XMTP", xmtp);
+  const queryClient = useQueryClient();
 
   const createPostMutation = useMutation({
     mutationFn,
     onSuccess: async (res, { channelId, title, content }) => {
-      // here we can send the first message
-      const posts = await xmtp?.conversations.list();
-      console.log(xmtp);
-      const topic = posts?.find((post) => post.topic === res.topic);
-      console.log(title, content, topic);
-      topic?.send(JSON.stringify({ title: title, content: content }));
+      const { data: conversations } = await refetch();
+
+      const topic = conversations?.find((post) => post.topic === res.topic);
+
+      topic
+        ?.send(JSON.stringify({ title: title, content: content }))
+        .then(() => {
+          document.getElementById("closeDialog")?.click();
+          queryClient.invalidateQueries(["channel", channelId.toString()]);
+        });
     },
   });
 
@@ -111,7 +117,9 @@ const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button disabled={createPostMutation.isLoading} type="submit">
+              Submit
+            </Button>
           </form>
         </Form>
       </DialogContent>
