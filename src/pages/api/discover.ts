@@ -1,5 +1,7 @@
 import { getAuth } from "@/auth/getAuth";
 import { prisma } from "@/db";
+import { checkAllowed } from "@/lib/checkAllowed";
+import { getAddrInfo } from "@/lib/getAddrInfo";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -20,14 +22,14 @@ export default async function handler(
 
   console.log(channels[0].allowed_address);
 
+  const addrInfo = await getAddrInfo(session.address);
+
   const filtered = channels.map((channel) => {
     const accessStatus = channel.allowed_address.find(
       (el) => el.address === session.address
     )?.hasJoined
       ? "joined"
-      : channel.allowed_address.some(
-          (allowed) => allowed.address === session.address
-        )
+      : checkAllowed(addrInfo, channel) // TO DO : channel category ?
       ? "allowed"
       : "denied";
     return {
