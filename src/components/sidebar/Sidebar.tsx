@@ -7,6 +7,7 @@ import { Channel } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import SidebarUser from "./SidebarUser";
+import { useQuery } from "@tanstack/react-query";
 
 type SidebarChannelButtonProps = {
   channel: Channel;
