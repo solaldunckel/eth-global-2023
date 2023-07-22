@@ -50,6 +50,8 @@ const mutationFn = async (values: FormValues & { channelId: string }) => {
 const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
   const { xmtp } = useXmtp();
 
+  console.log("XMTP", xmtp);
+
   const createPostMutation = useMutation({
     mutationFn,
     onSuccess: async (res, { channelId, title, content }) => {

@@ -26,8 +26,8 @@ const SidebarUser: FC = () => {
   const { setXmtp } = useXmtp();
 
   useEffect(() => {
-    Client.create(signer!, { env: "production" }).then((xmtp) => {
-      // setXmtp(xmtp);
+    Client.create(signer!, { env: "dev" }).then((xmtp) => {
+      setXmtp(xmtp);
       xmtp.enableGroupChat();
     });
   }, [setXmtp, signer]);
