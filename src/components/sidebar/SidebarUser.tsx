@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, type FC } from "react";
+import { type FC } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { mockDataCurrentUser } from "@/mockData";
 import { signOut, useSession } from "next-auth/react";
 import {
   DropdownMenu,
@@ -13,24 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { LogOut, User } from "lucide-react";
-import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
+import { Dialog, DialogTrigger } from "../ui/dialog";
 import UpdateProfileForm from "./UpdateProfileForm";
 import { Skeleton } from "../ui/skeleton";
-import { useXmtp } from "@/hooks/useXmtp";
-import { Client } from "@xmtp/xmtp-js";
-import { useEthersSigner } from "@/lib/utils";
 
 const SidebarUser: FC = () => {
   const { data: session, update, status } = useSession();
-  const signer = useEthersSigner();
-  const { setXmtp } = useXmtp();
-
-  useEffect(() => {
-    Client.create(signer!, { env: "dev" }).then((xmtp) => {
-      setXmtp(xmtp);
-      xmtp.enableGroupChat();
-    });
-  }, [setXmtp, signer]);
 
   if (status === "loading") {
     return (
@@ -48,17 +35,17 @@ const SidebarUser: FC = () => {
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex flex-row items-center">
+          <button className="flex flex-row items-center overflow-hidden">
             <Avatar className="mr-2">
               <AvatarImage src={session?.user.image} className="object-cover" />
-              <AvatarFallback>{mockDataCurrentUser.name}</AvatarFallback>
+              <AvatarFallback>{session?.user.username?.[0]}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col text-start">
               <h1 className="text-lg font-bold">
                 {`@${session?.user.username}` ?? session?.address}
               </h1>
-              <p className="text-xs font-light text-slate-300">
-                {mockDataCurrentUser.address}
+              <p className="text-xs font-light text-slate-300 overflow-ellipsis">
+                {session?.address}
               </p>
             </div>
           </button>

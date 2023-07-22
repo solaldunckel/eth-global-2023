@@ -2,9 +2,7 @@ import { getAuth } from "@/auth/getAuth";
 import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { Client, Conversation } from "@xmtp/xmtp-js";
-import { useEthersSigner } from "@/lib/utils";
-import { ethers } from "ethers";
+import { getXmtpClient, signer } from "@/xmtp";
 
 interface Session {
   address: string;
@@ -53,13 +51,7 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  console.log("isAllowed", isAllowed);
-  console.log("userAddress", userAddress);
-  // now we can create the conversation in xmtp and return the id to the user so he can post the first message ()
-  const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string);
-  console.log("signer address", signer.address);
-  const xmtp = await Client.create(signer, { env: "dev" });
-  xmtp.enableGroupChat(); // TO DO : take off, only one time ?
+  const xmtp = await getXmtpClient();
 
   const groupConversation = await xmtp.conversations.newGroupConversation([
     signer.address, // TO DO : change in production

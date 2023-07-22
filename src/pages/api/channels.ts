@@ -58,7 +58,6 @@ export default async function handler(
       channel: true,
     },
   });
-  // console.log("rep", (rep[0] as any).channel.posts);
 
   const arrayChannel = rep.flatMap((x) => x.channel);
   console.log("arrayChannel", arrayChannel);
