@@ -22,7 +22,7 @@ export default function Page({
 
       <div className="flex flex-col mt-4">
         {post?.messages?.map((comment) => (
-          <div className="flex flex-row gap-2 p-4">
+          <div key={comment.id} className="flex flex-row gap-2 p-4">
             <div className="h-10 w-10 rounded-full bg-green-500"></div>
             <div className="flex flex-col">
               <h1 className="font-bold text-lg">solal dunckel</h1>

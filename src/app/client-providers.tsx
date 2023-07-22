@@ -14,6 +14,8 @@ import {
   RainbowKitSiweNextAuthProvider,
   GetSiweMessageOptions,
 } from "@rainbow-me/rainbowkit-siwe-next-auth";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
   statement: "Sign in to my RainbowKit app",
@@ -42,17 +44,24 @@ type AppPropsWithSession = AppProps &
     session: Session;
   };
 
+const queryClient = new QueryClient();
+
 const ClientProviders: FC<AppPropsWithSession> = ({ children }) => {
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <SessionProvider refetchInterval={0}>
-        <RainbowKitSiweNextAuthProvider
-          getSiweMessageOptions={getSiweMessageOptions}
-        >
-          <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
-        </RainbowKitSiweNextAuthProvider>
-      </SessionProvider>
-    </WagmiConfig>
+    <QueryClientProvider client={queryClient}>
+      <WagmiConfig config={wagmiConfig}>
+        <SessionProvider refetchInterval={0}>
+          <RainbowKitSiweNextAuthProvider
+            getSiweMessageOptions={getSiweMessageOptions}
+          >
+            <RainbowKitProvider chains={chains}>
+              {children}
+              <ReactQueryDevtools position="bottom-right" />
+            </RainbowKitProvider>
+          </RainbowKitSiweNextAuthProvider>
+        </SessionProvider>
+      </WagmiConfig>
+    </QueryClientProvider>
   );
 };
 

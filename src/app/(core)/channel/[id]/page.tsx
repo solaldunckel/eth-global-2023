@@ -19,6 +19,7 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className="gap-4 flex flex-col">
         {channel.posts?.map((post) => (
           <Link
+            key={post.id}
             href={`/channel/${params.id}/topic/${post.id}`}
             className="flex flex-col gap-2 bg-[#171717] p-4 rounded"
           >
