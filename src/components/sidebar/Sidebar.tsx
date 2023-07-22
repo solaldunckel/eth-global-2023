@@ -10,6 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import FunnelLogo from "../../../public/funnel.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import CreateChannel from "../CreateChannel";
 
 type SidebarChannelButtonProps = {
   channel: Channel;
@@ -80,6 +87,17 @@ const Sidebar: FC = () => {
               <SidebarChannelButton channel={channel} key={index} />
             ))}
           </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" className="mt-4">
+                Create a channel
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogTitle>Create a Channel</DialogTitle>
+              <CreateChannel />
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
