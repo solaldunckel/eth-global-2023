@@ -1,9 +1,10 @@
 import type { FC } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { mockDataChannels, mockDataCurrentUser } from "@/mockData";
 import { Channel } from "@/types";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
+import SidebarUser from "./SidebarUser";
 
 type SidebarChannelButtonProps = {
   channel: Channel;
@@ -39,28 +40,14 @@ const Sidebar: FC = () => {
         <div className="flex flex-col">
           <h2 className="font-bold text-xl mb-2">My channels</h2>
           <div className="flex flex-col gap-2">
-            {mockDataChannels.map((channel, index) => (
-              <SidebarChannelButton channel={channel} key={index} />
+            {mockDataChannels.map((channel) => (
+              <SidebarChannelButton key={channel.id} channel={channel} />
             ))}
           </div>
         </div>
       </div>
 
-      <div className="flex flex-row items-center">
-        <Avatar className="mr-2">
-          <AvatarImage
-            src={mockDataCurrentUser.image_url}
-            className="object-cover"
-          />
-          <AvatarFallback>{mockDataCurrentUser.name}</AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col">
-          <h1 className="text-xl font-bold">{mockDataCurrentUser.name}</h1>
-          <p className="text-xs font-light text-slate-300">
-            {mockDataCurrentUser.address}
-          </p>
-        </div>
-      </div>
+      <SidebarUser />
     </div>
   );
 };
