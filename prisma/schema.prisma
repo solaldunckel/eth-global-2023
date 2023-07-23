@@ -8,14 +8,21 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum ConditionType {
+  NFT
+  OG
+  PROTOCOL
+}
 model channel {
-  id              Int               @id
+  id              Int               @id @default(autoincrement())
   name            String            @db.VarChar(20)
   category        String            @db.VarChar(20)
   image_url       String?           @db.VarChar(2083)
   query           String            @db.VarChar(2500)
   description     String            @db.VarChar(2500)
   allowed_address allowed_address[]
+  condition       String            @db.VarChar(100)
+  conditionType   ConditionType
   posts           posts[]
 }
 
@@ -23,6 +30,8 @@ model users {
   address         String  @id @db.Char(42)
   username        String? @db.VarChar(50)
   profile_pic_url String? @db.VarChar(2083)
+  firstTxTimestamp Int   @db.Int
+  toAddr          String @db.LongText
 }
 
 model allowed_address {
