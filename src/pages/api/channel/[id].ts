@@ -37,6 +37,7 @@ export default async function handler(
       create: {
         address: session.address.toLowerCase(),
         channel_id: parseInt(req.query.id as string),
+        hasJoined: true,
       },
       update: {
         hasJoined: true,
