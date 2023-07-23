@@ -27,27 +27,18 @@ export default async function handler(
   }
 
   if (req.method === "POST") {
-    const canJoin = await prisma.allowed_address.findUnique({
+    await prisma.allowed_address.upsert({
       where: {
         channel_id_address: {
-          address: session.address,
+          address: session.address.toLowerCase(),
           channel_id: parseInt(req.query.id as string),
         },
       },
-    });
-
-    if (!canJoin) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    await prisma.allowed_address.update({
-      where: {
-        channel_id_address: {
-          address: session.address,
-          channel_id: parseInt(req.query.id as string),
-        },
+      create: {
+        address: session.address.toLowerCase(),
+        channel_id: parseInt(req.query.id as string),
       },
-      data: {
+      update: {
         hasJoined: true,
       },
     });
@@ -58,11 +49,16 @@ export default async function handler(
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-
   const xmtp = await getXmtpClient(); // TO DO : take off, only one time ?
   const convList = await xmtp.conversations.list();
 
-  const allUsers = await prisma.users.findMany({});
+  const allUsers = await prisma.users.findMany({
+    select: {
+      address: true,
+      profile_pic_url: true,
+      username: true,
+    },
+  });
   const nb_users = await prisma.allowed_address.count({
     where: {
       channel_id: parseInt(req.query.id as string),

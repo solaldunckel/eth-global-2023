@@ -67,7 +67,6 @@ const CreateChannel: FC = () => {
   });
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data);
     sendForm.mutate(data);
   };
 

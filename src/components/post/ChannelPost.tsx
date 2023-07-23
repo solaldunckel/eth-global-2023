@@ -17,7 +17,6 @@ async function joinPost(topic: string) {
 }
 
 const ChannelPost: FC<ChannelPostProps> = ({ post, channelId }) => {
-  // console.log(post.topic_id, post.topic_id.split("/")[3]);
   return (
     <Link
       key={post.topic_id}
