@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getBadgeColor } from "@/lib/getBadgeColor";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Lock, Merge } from "lucide-react";
+import { Check, Loader2, Lock, Merge } from "lucide-react";
 import Image from "next/image";
 
 type DiscoverChannel = {
@@ -31,7 +31,7 @@ async function joinChannelFn(channelId: number) {
 }
 
 export default function Home() {
-  const { data } = useQuery(["discover"], discoverChannels);
+  const { data, isLoading } = useQuery(["discover"], discoverChannels);
   const queryClient = useQueryClient();
 
   const joinChannel = useMutation({
@@ -41,6 +41,14 @@ export default function Home() {
       queryClient.invalidateQueries(["discover"]);
     },
   });
+
+  if (isLoading) {
+    return (
+      <div className="h-full w-full justify-center items-center flex">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-8">
