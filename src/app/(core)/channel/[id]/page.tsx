@@ -5,7 +5,7 @@ import { useChannel } from "@/hooks/useChannel";
 
 export default function Page({ params }: { params: { id: string } }) {
   // const channel = mockDataChannels.find((channel) => channel.id === params.id);
-  const { data } = useChannel(params.id);
+  const { data } = useChannel(Number(params.id));
 
   if (!data) {
     return <div>Channel not found</div>;

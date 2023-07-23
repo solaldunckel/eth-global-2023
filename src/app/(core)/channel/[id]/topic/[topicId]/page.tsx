@@ -24,7 +24,7 @@ export default function Page({
 }: {
   params: { id: string; topicId: string };
 }) {
-  const { data } = useChannel(params.id);
+  const { data } = useChannel(Number(params.id));
   const { xmtp } = useXmtp();
   const decoded = decodeURIComponent(params.topicId);
   const { data: conversations } = useConversation();
@@ -61,7 +61,7 @@ export default function Page({
   const onSubmit = async (data: any) => {
     conversation?.send(data.message);
     queryClient.setQueryData(
-      ["channel", params.id.toString()],
+      ["channel", Number(params.id)],
       (old: Channel | undefined) => {
         if (!old) return;
 
@@ -70,21 +70,24 @@ export default function Page({
           posts: old?.posts.map((post) => {
             return {
               ...post,
-              comments: post.comments.concat({
-                author: {
-                  address: session?.address!,
-                  username: session?.user.username,
-                  profile_pic_url: session?.user.image,
+              comments: [
+                ...post.comments,
+                {
+                  author: {
+                    address: session?.address!,
+                    username: session?.user.username,
+                    profile_pic_url: session?.user.image,
+                  },
+                  content: data.message,
+                  timestamp: new Date().toISOString(),
                 },
-                content: data.message,
-                timestamp: new Date().toISOString(),
-              }),
+              ],
             };
           }),
         };
       }
     );
-    queryClient.invalidateQueries(["channel", params.id.toString()]);
+    queryClient.invalidateQueries(["channel", params.id]);
     form.reset();
   };
 
@@ -97,7 +100,7 @@ export default function Page({
           continue;
         }
 
-        queryClient.invalidateQueries(["channel", params.id.toString()]);
+        queryClient.invalidateQueries(["channel", params.id]);
       }
     }
 

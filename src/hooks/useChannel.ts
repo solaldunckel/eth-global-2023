@@ -2,12 +2,12 @@
 import { Channel, Post } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 
-async function fetchPosts(channel_id: string) {
+async function fetchPosts(channel_id: number) {
   const res = await fetch(`/api/channel/${channel_id}`);
   return res.json() as Promise<Channel>;
 }
 
-export const useChannel = (channelId: string) => {
+export const useChannel = (channelId: number) => {
   return useQuery({
     queryFn: () => fetchPosts(channelId),
     queryKey: ["channel", channelId],

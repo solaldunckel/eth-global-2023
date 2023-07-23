@@ -69,7 +69,7 @@ const providers = [
 
 const updateProfileSchema = z.object({
   username: z.string().min(3).max(20).optional(),
-  image: z.string().url().optional(),
+  image: z.string().optional(),
 });
 
 export const nextAuthOptions: NextAuthOptions = {

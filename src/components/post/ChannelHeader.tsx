@@ -22,7 +22,7 @@ const ChannelHeader: FC<ChannelHeaderProps> = ({ channel }) => {
       </Avatar>
 
       <div className="flex flex-col justify-center ml-4 gap-2 ">
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center grow">
           <h1 className="text-4xl font-bold">{channel.name}</h1>
           <Badge className="h-6 ml-4" variant="default">
             {channel.category}

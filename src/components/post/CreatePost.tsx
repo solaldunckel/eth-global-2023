@@ -23,7 +23,6 @@ import {
 } from "../ui/form";
 import { Textarea } from "../ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useXmtp } from "@/hooks/useXmtp";
 import { useConversation } from "@/hooks/useConversation";
 import { Channel } from "@/types";
 
@@ -57,17 +56,54 @@ const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
 
       const topic = conversations?.find((post) => post.topic === res.topic);
 
+      if (!topic) {
+        throw new Error("Topic not found");
+      }
+
       topic
-        ?.send(JSON.stringify({ title: title, content: content }))
+        .send(JSON.stringify({ title: title, content: content }))
         .then(() => {
           document.getElementById("closeDialog")?.click();
-          queryClient.invalidateQueries(["channel", channelId.toString()]);
+          queryClient.setQueryData<Channel>(
+            ["channel", channelId],
+            (oldData) => {
+              if (!oldData) {
+                return oldData;
+              }
+
+              return {
+                ...oldData,
+                posts: [
+                  ...oldData.posts,
+                  {
+                    topic_id: res.topic,
+                    author: {
+                      username: "me",
+                      image: "https://i.pravatar.cc/300",
+                      address: "me",
+                    },
+                    title,
+                    content,
+                    channel_id: channelId,
+                    author_address: "me",
+                    comments: [],
+                    timestamp: new Date().toISOString(),
+                  },
+                ],
+              };
+            }
+          );
+          queryClient.invalidateQueries(["channel", channelId]);
         });
     },
   });
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      title: "",
+      content: "",
+    },
   });
 
   function onSubmit(values: FormValues) {
