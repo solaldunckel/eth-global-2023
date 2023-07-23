@@ -46,6 +46,7 @@ export default async function handler(
   const allowedList = await prisma.allowed_address.findMany({
     where: {
       channel_id: parsed.data.channelId,
+      hasJoined: true,
     },
   });
 

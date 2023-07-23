@@ -44,13 +44,18 @@ const providers = [
               siwe.address
             );
 
-            user = await prisma.users.create({
-              data: {
-                address: siwe.address,
-                firstTxTimestamp: firstTxTimestamp,
-                toAddr: JSON.stringify(toAddr),
-              },
-            });
+            try {
+              user = await prisma.users.create({
+                data: {
+                  address: siwe.address,
+                  firstTxTimestamp: firstTxTimestamp,
+                  toAddr: JSON.stringify(toAddr),
+                },
+              });
+            } catch (e) {
+              console.log(e);
+              throw new Error("Error creating user");
+            }
           }
 
           return {

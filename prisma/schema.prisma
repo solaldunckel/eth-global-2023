@@ -13,6 +13,7 @@ enum ConditionType {
   OG
   PROTOCOL
 }
+
 model channel {
   id              Int               @id @default(autoincrement())
   name            String            @db.VarChar(20)
@@ -27,11 +28,11 @@ model channel {
 }
 
 model users {
-  address         String  @id @db.Char(42)
-  username        String? @db.VarChar(50)
-  profile_pic_url String? @db.VarChar(2083)
-  firstTxTimestamp Int   @db.Int
-  toAddr          String @db.LongText
+  address          String  @id @db.Char(42)
+  username         String? @db.VarChar(50)
+  profile_pic_url  String? @db.VarChar(2083)
+  firstTxTimestamp BigInt
+  toAddr           String  @db.LongText
 }
 
 model allowed_address {
