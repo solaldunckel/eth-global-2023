@@ -22,7 +22,13 @@ const providers = [
       },
     },
     async authorize(credentials, req) {
-      console.log("test", credentials, req);
+      console.log("test");
+      console.log(
+        "credentials",
+        credentials,
+        typeof credentials === "object",
+        typeof credentials?.message === "object"
+      );
 
       try {
         const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
