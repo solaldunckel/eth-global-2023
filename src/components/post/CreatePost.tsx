@@ -66,7 +66,7 @@ const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
           document.getElementById("closeDialog")?.click();
           queryClient.setQueryData<Channel>(
             ["channel", channelId],
-            (oldData) => {
+            (oldData: any) => {
               if (!oldData) {
                 return oldData;
               }

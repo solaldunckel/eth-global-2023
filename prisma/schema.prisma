@@ -16,11 +16,13 @@ enum ConditionType {
 }
 
 model channel {
-  id              Int               @id @default(autoincrement())
-  name            String            @db.VarChar(20)
-  category        String            @db.VarChar(20)
-  image_url       String?           @db.VarChar(2083)
-  description     String            @db.VarChar(2500)
+  id              Int                   @id @default(autoincrement())
+  name            String                @db.VarChar(20)
+  category        String                @db.VarChar(20)
+  image_url       String?               @db.VarChar(2083)
+  description     String                @db.VarChar(2500)
+  condition       String                @db.VarChar(100)
+  conditionType   channel_conditionType
   allowed_address allowed_address[]
   posts           posts[]
 }

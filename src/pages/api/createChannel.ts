@@ -70,6 +70,10 @@ async function nftChannel(parsed: z.infer<typeof schema>) {
 }
 
 async function ogChannel(parsed: z.infer<typeof schema>) {
+  if (!parsed.title || !parsed.category || !parsed.description) {
+    throw new Error("Missing field");
+  }
+
   const newChannel = await prisma.channel.create({
     data: {
       name: parsed.title,
