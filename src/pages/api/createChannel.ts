@@ -166,7 +166,11 @@ async function getNftHolders(tokenAddress: string, blockchain: string) {
 
     await sleep(220);
   }
-  return addresses;
+  // make sure addresses are unique
+  const uniqueAddresses = addresses.filter(
+    (value, index, self) => self.indexOf(value) === index
+  );
+  return uniqueAddresses;
 }
 
 async function getPoapHolders(eventId: string) {
