@@ -9,7 +9,7 @@ import SidebarUser from "./SidebarUser";
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
-import FunnelLogo from "../../../public/funnel.png";
+import FunnelLogo from "../../../public/funnel_logo.png";
 import {
   Dialog,
   DialogContent,
