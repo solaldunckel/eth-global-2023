@@ -10,9 +10,7 @@ type ChannelHeaderProps = {
 };
 
 const ChannelHeader: FC<ChannelHeaderProps> = ({ channel }) => {
-  console.log(channel.id);
-  const { data } = useChannel(channel.id.toString());
-  console.log(data);
+  const { data } = useChannel(channel.id);
 
   return (
     <div className="flex flex-row items-center">

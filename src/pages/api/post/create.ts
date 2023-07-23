@@ -69,7 +69,5 @@ export default async function handler(
     },
   });
 
-  console.log("topic generated :", groupConversation.topic);
-
   return res.json({ topic: groupConversation.topic });
 }

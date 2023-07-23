@@ -8,22 +8,15 @@ datasource db {
   relationMode = "prisma"
 }
 
-enum ConditionType {
-  NFT
-  OG
-  PROTOCOL
-}
-
 model channel {
-  id              Int               @id @default(autoincrement())
-  name            String            @db.VarChar(20)
-  category        String            @db.VarChar(20)
-  image_url       String?           @db.VarChar(2083)
-  query           String            @db.VarChar(2500)
-  description     String            @db.VarChar(2500)
+  id              Int                   @id @default(autoincrement())
+  name            String                @db.VarChar(20)
+  category        String                @db.VarChar(20)
+  image_url       String?               @db.VarChar(2083)
+  description     String                @db.VarChar(2500)
+  condition       String                @db.VarChar(100)
+  conditionType   channel_conditionType
   allowed_address allowed_address[]
-  condition       String            @db.VarChar(100)
-  conditionType   ConditionType
   posts           posts[]
 }
 
@@ -38,16 +31,22 @@ model users {
 model allowed_address {
   channel_id Int
   address    String  @db.Char(42)
-  channel    channel @relation(fields: [channel_id], references: [id])
   hasJoined  Boolean @default(false)
+  channel    channel @relation(fields: [channel_id], references: [id])
 
   @@id([channel_id, address])
 }
 
 model posts {
   channel_id     Int
-  topic_id       String @id @db.VarChar(100)
-  author_address String @db.Char(42)
+  topic_id       String  @id @db.VarChar(100)
+  author_address String  @db.Char(42)
+  channel        channel @relation(fields: [channel_id], references: [id])
+}
 
-  channel channel @relation(fields: [channel_id], references: [id])
+enum channel_conditionType {
+  NFT
+  POAP
+  OG
+  PROTOCOL
 }

@@ -30,12 +30,12 @@ export default async function handler(
     await prisma.allowed_address.upsert({
       where: {
         channel_id_address: {
-          address: session.address,
+          address: session.address.toLowerCase(),
           channel_id: parseInt(req.query.id as string),
         },
       },
       create: {
-        address: session.address,
+        address: session.address.toLowerCase(),
         channel_id: parseInt(req.query.id as string),
       },
       update: {

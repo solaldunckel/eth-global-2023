@@ -39,9 +39,6 @@ const UpdateProfileForm: FC<{ session: Session | null }> = ({ session }) => {
   };
 
   function onSubmit(values: FormValues) {
-    // todo
-    console.log("values: ", values);
-
     update({
       ...values,
     }).then(() => {

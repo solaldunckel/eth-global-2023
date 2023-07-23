@@ -8,7 +8,7 @@ export async function checkAllowed(userAddress: string, channel: channel) {
       where: {
         channel_id_address: {
           channel_id: channel.id,
-          address: userAddress,
+          address: userAddress.toLowerCase(),
         },
       },
     });

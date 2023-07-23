@@ -14,8 +14,6 @@ export default function Layout({
 }) {
   const { data, isLoading } = useChannel(Number(params.id));
 
-  console.log(data);
-
   if (isLoading) {
     return (
       <div className="h-full w-full justify-center items-center flex">

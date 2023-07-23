@@ -26,7 +26,7 @@ export default async function handler(
   const filtered = await Promise.all(
     channels.map(async (channel) => {
       const accessStatus = channel.allowed_address.find(
-        (el) => el.address === session.address
+        (el) => el.address === session.address.toLowerCase()
       )?.hasJoined
         ? "joined"
         : (await checkAllowed(session.address, channel)) // TO DO : channel category ?
