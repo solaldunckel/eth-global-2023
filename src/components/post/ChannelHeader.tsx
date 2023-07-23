@@ -11,7 +11,7 @@ type ChannelHeaderProps = {
 
 const ChannelHeader: FC<ChannelHeaderProps> = ({ channel }) => {
   console.log(channel.id);
-  const { data } = useChannel(channel.id);
+  const { data } = useChannel(channel.id.toString());
   console.log(data);
 
   return (

@@ -6,6 +6,7 @@ export interface Channel {
   category: string;
   query: string;
   image_url?: string;
+  condition: string;
   description: string;
   nb_users: number;
   posts: Post[];
