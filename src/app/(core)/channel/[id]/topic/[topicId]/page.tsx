@@ -109,6 +109,10 @@ export default function Page({
     init();
   }, [conversation, xmtp]);
 
+  if (!wantedPost) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col mt-8">
       <div className="flex flex-col bg-[#171717] rounded p-4 border border-gray-500/25">
@@ -120,7 +124,7 @@ export default function Page({
           <div className="text-xs text-gray-500">
             posted{" "}
             <span className="font-bold">
-              {getTimeElapsed(wantedPost!.timestamp)}
+              {getTimeElapsed(wantedPost.timestamp)}
             </span>{" "}
             by{" "}
             <span className="font-bold">
