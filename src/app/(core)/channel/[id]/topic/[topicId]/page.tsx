@@ -29,19 +29,19 @@ export default function Page({
   const decoded = decodeURIComponent(params.topicId);
   const { data: conversations } = useConversation();
 
-  console.log(data);
-  console.log(data?.posts);
-  console.log(decoded);
+  // console.log(data);
+  // console.log(data?.posts);
+  // console.log(decoded);
 
   const wantedPost = data?.posts.find(
-    (post) => post.topic_id.split("/")[3] === decoded
+    (post) => post.topic_id.split("/")[3].slice(0, 15) === decoded.slice(0, 15)
   );
 
   const queryClient = useQueryClient();
 
   const conversation = useMemo(() => {
     return conversations?.find((conv) => {
-      return conv.topic.split("/")[3] === decoded;
+      return conv.topic.split("/")[3].slice(0, 15) === decoded.slice(0, 15);
     });
   }, [conversations, decoded]);
 
