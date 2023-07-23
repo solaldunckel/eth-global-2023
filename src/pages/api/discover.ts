@@ -18,9 +18,6 @@ export default async function handler(
     include: {
       allowed_address: true,
     },
-    where: {
-      category: "NFT",
-    },
   });
 
   // channels.find((channel) => channel.id === 1).allowed_address;
