@@ -29,6 +29,11 @@ export default function Page({
   const decoded = decodeURIComponent(params.topicId);
   const { data: conversations } = useConversation();
 
+  console.log(data);
+  console.log(data.posts);
+
+  console.log(decoded);
+
   const wantedPost = data?.posts.find(
     (post) => post.topic_id.split("/")[3] === decoded
   );
