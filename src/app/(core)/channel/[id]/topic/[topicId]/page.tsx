@@ -30,8 +30,7 @@ export default function Page({
   const { data: conversations } = useConversation();
 
   console.log(data);
-  console.log(data.posts);
-
+  console.log(data?.posts);
   console.log(decoded);
 
   const wantedPost = data?.posts.find(
