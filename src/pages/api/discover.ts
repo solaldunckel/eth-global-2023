@@ -18,26 +18,30 @@ export default async function handler(
     include: {
       allowed_address: true,
     },
+    where: {
+      category: "NFT",
+    },
   });
 
-  console.log(channels[0].allowed_address);
+  // channels.find((channel) => channel.id === 1).allowed_address;
+  const addrInfo = await getAddrInfo(session.address).catch(() => null);
 
-  const addrInfo = await getAddrInfo(session.address);
-
-  const filtered = channels.map((channel) => {
-    const accessStatus = channel.allowed_address.find(
-      (el) => el.address === session.address
-    )?.hasJoined
-      ? "joined"
-      : checkAllowed(addrInfo, channel) // TO DO : channel category ?
-      ? "allowed"
-      : "denied";
-    return {
-      ...channel,
-      allowed_address: undefined,
-      accessStatus,
-    };
-  });
+  const filtered = await Promise.all(
+    channels.map(async (channel) => {
+      const accessStatus = channel.allowed_address.find(
+        (el) => el.address === session.address
+      )?.hasJoined
+        ? "joined"
+        : (await checkAllowed(session.address, channel)) // TO DO : channel category ?
+        ? "allowed"
+        : "denied";
+      return {
+        ...channel,
+        allowed_address: undefined,
+        accessStatus,
+      };
+    })
+  );
 
   return res.json(filtered);
 }

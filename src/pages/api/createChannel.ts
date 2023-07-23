@@ -43,10 +43,12 @@ async function nftChannel(parsed: z.infer<typeof schema>) {
       description: parsed.description,
       query: "",
       image_url: parsed.image_url,
+      condition: parsed.conditionAddress!,
+      conditionType: "NFT",
     },
   });
 
-  prisma.allowed_address.createMany({
+  await prisma.allowed_address.createMany({
     data: [
       ...addresses.map((address) => ({
         address,
@@ -65,6 +67,8 @@ async function ogChannel(parsed: z.infer<typeof schema>) {
       description: parsed.description,
       query: "",
       image_url: parsed.image_url,
+      condition: parsed.conditionDate!,
+      conditionType: "OG",
     },
   });
 }
@@ -83,7 +87,7 @@ type ResAirStack = {
 async function getNftHolders(tokenAddress: string, blockchain: string) {
   let addresses: string[] = [];
   let end = false;
-  let nextPage: string = "";
+  let nextPage: string | null = null;
 
   while (end === false) {
     const res = await fetch(API, {
@@ -97,7 +101,7 @@ async function getNftHolders(tokenAddress: string, blockchain: string) {
         variables: {
           address: tokenAddress,
           blockchain,
-          nextPage,
+          cursor: nextPage,
         },
       }),
     });
@@ -109,7 +113,7 @@ async function getNftHolders(tokenAddress: string, blockchain: string) {
       console.log("ERROR"); // TO DO : handle error
     }
 
-    data.TokenBalances.TokenBalance.forEach((balance) => {
+    data.TokenBalances.TokenBalance?.forEach((balance) => {
       addresses.push(balance.owner.addresses[0]);
     });
 
@@ -117,7 +121,14 @@ async function getNftHolders(tokenAddress: string, blockchain: string) {
       end = true;
       console.log(end);
     } else nextPage = data.TokenBalances.pageInfo.nextCursor;
+    console.log(data.TokenBalances.pageInfo.nextCursor);
+    console.log("coucou");
+    await sleep(2000);
   }
-
   return addresses;
+}
+
+// sleep function to avoid rate limit
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

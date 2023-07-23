@@ -1,4 +1,5 @@
 import { prisma } from "@/db";
+import { getAddrInfo } from "@/lib/getAddrInfo";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
@@ -39,9 +40,15 @@ const providers = [
           });
 
           if (!user) {
+            const { firstTxTimestamp, toAddr } = await getAddrInfo(
+              siwe.address
+            );
+
             user = await prisma.users.create({
               data: {
                 address: siwe.address,
+                firstTxTimestamp: firstTxTimestamp,
+                toAddr: JSON.stringify(toAddr),
               },
             });
           }
