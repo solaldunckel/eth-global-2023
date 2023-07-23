@@ -7,8 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { LogOut, User } from "lucide-react";
@@ -35,14 +33,16 @@ const SidebarUser: FC = () => {
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex flex-row items-center overflow-hidden">
+          <button className="flex flex-row items-center overflow-hidden overflow-ellipsis">
             <Avatar className="mr-2">
               <AvatarImage src={session?.user.image} className="object-cover" />
               <AvatarFallback>{session?.user.username?.[0]}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col text-start">
-              <h1 className="text-lg font-bold">
-                {`@${session?.user.username}` ?? session?.address}
+              <h1 className="text-lg font-bold overflow-hidden overflow-ellipsis">
+                {session?.user.username
+                  ? `@${session?.user.username}`
+                  : session?.address}
               </h1>
               <p className="text-xs font-light text-slate-300 overflow-ellipsis">
                 {session?.address}
@@ -50,11 +50,7 @@ const SidebarUser: FC = () => {
             </div>
           </button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>
-            {`@${session?.user.username}` ?? session?.address}
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
+        <DropdownMenuContent className="w-56 overflow-ellipsis">
           <DropdownMenuItem>
             <DialogTrigger asChild>
               <button className="flex flex-row items-center w-full">

@@ -22,13 +22,14 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
-  title: z.string().nonempty({ message: "A title is required" }),
-  description: z.string(),
-  category: z.string(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  category: z.string().optional(),
   image_url: z.string().optional(),
-  conditionCategory: z.enum(["NFT", "OG"]),
+  conditionCategory: z.enum(["NFT", "OG", "POAP"]),
   conditionAddress: z.string().optional(),
   conditionDate: z.string().optional(),
+  conditionEventId: z.string().optional(),
   blockchain: z.enum(["ethereum", "polygon"]).optional(),
 });
 
@@ -78,58 +79,6 @@ const CreateChannel: FC = () => {
       >
         <FormField
           control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="ETH Global" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Input placeholder="A channel for hackers..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <FormControl>
-                <Input placeholder="Event" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="image_url"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input placeholder="image url (optional)" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
           name="conditionCategory"
           render={({ field }) => (
             <FormItem>
@@ -143,6 +92,7 @@ const CreateChannel: FC = () => {
                 <SelectContent>
                   <SelectItem value="NFT">NFT</SelectItem>
                   <SelectItem value="OG">OG</SelectItem>
+                  <SelectItem value="POAP">POAP</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -205,6 +155,78 @@ const CreateChannel: FC = () => {
             )}
           />
         )}
+        {gatingCondition === "POAP" && (
+          <FormField
+            control={form.control}
+            name="conditionEventId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Event ID</FormLabel>
+                <FormControl>
+                  <Input placeholder="Poap Event ID" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+        {gatingCondition !== "POAP" ? (
+          <>
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="ETH Global" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input placeholder="A channel for hackers..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Event" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="image_url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="image url (optional)" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        ) : null}
+
         <Button type="submit">Submit</Button>
       </form>
     </Form>
