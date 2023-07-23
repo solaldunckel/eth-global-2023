@@ -19,6 +19,11 @@ export default function Page({ params }: { params: { id: string } }) {
       </div>
 
       <div className="gap-4 flex flex-col">
+        {data?.posts.length === 0 && (
+          <p className="text-sm text-gray-500 font-light">
+            There are no posts yet
+          </p>
+        )}
         {data?.posts.map((post, idx) => (
           <ChannelPost key={idx} post={post} channelId={post.channel_id} />
         ))}

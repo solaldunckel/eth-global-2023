@@ -17,6 +17,9 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import CreateChannel from "../CreateChannel";
+import { Badge } from "../ui/badge";
+import { cn } from "@/lib/utils";
+import { getBadgeColor } from "@/lib/getBadgeColor";
 
 type SidebarChannelButtonProps = {
   channel: Channel;
@@ -28,13 +31,17 @@ const SidebarChannelButton: FC<SidebarChannelButtonProps> = ({ channel }) => {
       href={`/channel/${channel.id}`}
       className="flex flex-row items-center hover:bg-white/20 rounded transition-all py-1 px-2 text-start"
     >
-      <Avatar className="mr-2">
+      <Avatar className="mr-2 h-12 w-12">
         <AvatarImage src={channel.image_url} className="object-cover" />
         <AvatarFallback>{channel.name[0]}</AvatarFallback>
       </Avatar>
       <div className="flex flex-col">
         <p className="font-bold text-base">{channel.name}</p>
-        <p className="text-sm text-gray-500 font-light">2 new posts</p>
+        <Badge
+          className={cn("mt-1 self-start", getBadgeColor(channel.category))}
+        >
+          {channel.category}
+        </Badge>
       </div>
     </Link>
   );
@@ -70,7 +77,11 @@ const Sidebar: FC = () => {
         <div className="h-24 justify-center items-center flex">
           <Image src={FunnelLogo} alt="logo" className="w-[256px]" />
         </div>
-        <Button variant="outline" asChild>
+        <Button
+          variant="outline"
+          className="dark:from-[#64B696] dark:to-[#796CB6] dark:bg-gradient-to-r hover:opacity-50 transition-all"
+          asChild
+        >
           <Link href="/">Discover</Link>
         </Button>
 

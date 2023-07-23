@@ -1,8 +1,11 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { getBadgeColor } from "@/lib/getBadgeColor";
+import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Lock } from "lucide-react";
+import { Check, Lock, Merge } from "lucide-react";
 import Image from "next/image";
 
 type DiscoverChannel = {
@@ -14,6 +17,7 @@ type DiscoverChannel = {
   description: string;
   accessStatus: "allowed" | "denied" | "joined";
 };
+
 async function discoverChannels() {
   return fetch("/api/discover").then(
     (res) => res.json() as Promise<DiscoverChannel[]>
@@ -40,6 +44,7 @@ export default function Home() {
 
   return (
     <div className="p-8">
+      <h1 className="text-3xl font-bold text-center mb-8">Discover</h1>
       <div className="grid grid-cols-2 gap-2 ">
         {data?.map((channel, idx) => {
           return (
@@ -64,19 +69,30 @@ export default function Home() {
                 <p className="text-gray-500 text-sm font-light">
                   {channel.description}
                 </p>
+                <Badge
+                  className={cn(
+                    "mt-2 self-start",
+                    getBadgeColor(channel.category)
+                  )}
+                >
+                  {channel.category}
+                </Badge>
               </div>
               <div className="flex items-center">
                 {channel.accessStatus === "denied" ? (
-                  <Lock />
+                  <Lock className="opacity-75" />
                 ) : channel.accessStatus === "joined" ? (
                   <div className="flex flex-row gap-2 items-center">
                     <Check className="text-green-500 h-6 w-6" />
                   </div>
                 ) : (
                   <Button
+                    className="dark:bg-transparent dark:text-bold"
+                    variant="outline"
                     disabled={joinChannel.isLoading}
                     onClick={() => joinChannel.mutate(channel.id)}
                   >
+                    <Merge className="h-3 w-3 mr-3" />
                     Join
                   </Button>
                 )}

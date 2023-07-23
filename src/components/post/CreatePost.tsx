@@ -25,6 +25,7 @@ import { Textarea } from "../ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useConversation } from "@/hooks/useConversation";
 import { Channel } from "@/types";
+import { Plus } from "lucide-react";
 
 type CreatePostProps = {
   channelId: number;
@@ -116,7 +117,13 @@ const CreatePost: FC<CreatePostProps> = ({ channelId }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Create a Post</Button>
+        <Button
+          variant="outline"
+          className="dark:from-[#64B696] dark:to-[#796CB6] dark:bg-gradient-to-l hover:opacity-50 transition-all"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Create a Post
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

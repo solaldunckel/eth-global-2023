@@ -150,6 +150,11 @@ export default function Page({
         </form>
       </Form>
       <div className="flex flex-col mt-4">
+        {comments && comments.length === 0 && (
+          <p className="text-sm text-gray-500 font-light">
+            There are no comments yet
+          </p>
+        )}
         {comments?.map((comment, index) => (
           <div key={index} className="flex flex-row gap-2 p-4">
             {comment.author.profile_pic_url ? (
