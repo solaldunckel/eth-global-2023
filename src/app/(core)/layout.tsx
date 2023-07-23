@@ -16,7 +16,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const onClick = async () => {
     setIsLoading(true);
-    Client.create(signer!, { env: "dev" })
+    Client.create(signer!, { env: "production" })
       .then(async (xmtp) => {
         setXmtp(xmtp);
         xmtp.enableGroupChat();

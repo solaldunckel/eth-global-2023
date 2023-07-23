@@ -9,7 +9,7 @@ export const signer = new ethers.Wallet(process.env.PRIVATE_KEY as string);
 
 export async function getXmtpClient() {
   const xmtp =
-    globalForXmtp.xmtp ?? (await Client.create(signer, { env: "dev" }));
+    globalForXmtp.xmtp ?? (await Client.create(signer, { env: "production" }));
 
   globalForXmtp.xmtp = xmtp;
 
