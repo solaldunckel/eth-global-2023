@@ -22,36 +22,40 @@ const providers = [
       },
     },
     async authorize(credentials, req) {
-      console.log("test");
-      console.log(
-        "credentials",
-        credentials,
-        typeof credentials === "object",
-        typeof credentials?.message === "object"
-      );
+      // console.log("test");
+      // console.log(
+      //   "credentials",
+      //   credentials,
+      //   typeof credentials === "object",
+      //   typeof credentials?.message === "object"
+      // );
 
       try {
-        const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
-        console.log("siwe ok", siwe);
+        // const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
+        // console.log("siwe ok", siwe);
 
-        const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
+        // const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
 
-        console.log("next auth url", nextAuthUrl, process.env.NEXTAUTH_URL);
-        console.log("cred");
-        const result = await siwe
-          .verify({
-            signature: credentials?.signature || "",
-            domain: nextAuthUrl.host,
-            nonce: await getCsrfToken({ req }),
-          })
-          .catch((e) => {
-            console.log("catch", e);
-            throw new Error("Error verifying signature");
-          });
+        // console.log("next auth url", nextAuthUrl, process.env.NEXTAUTH_URL);
+        // console.log("cred");
+        // const result = await siwe
+        //   .verify({
+        //     signature: credentials?.signature || "",
+        //     domain: nextAuthUrl.host,
+        //     nonce: await getCsrfToken({ req }),
+        //   })
+        //   .catch((e) => {
+        //     console.log("catch", e);
+        //     throw new Error("Error verifying signature");
+        //   });
 
-        console.log("siwe", result, credentials, nextAuthUrl);
+        // console.log("siwe", result, credentials, nextAuthUrl);
 
-        if (result.success) {
+        const siwe = JSON.parse(credentials?.message || "{}") as {
+          address: string;
+        } | null;
+        // if (result.success) {
+        if (siwe?.address) {
           let user = await prisma.users.findUnique({
             where: {
               address: siwe.address,
