@@ -102,7 +102,7 @@ export default function Page({
 
         console.log("NEW MESSAGE");
 
-        queryClient.invalidateQueries(["channel", params.id]);
+        queryClient.invalidateQueries(["channel", Number(params.id)]);
       }
     }
 
