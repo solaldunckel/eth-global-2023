@@ -11,7 +11,7 @@ export async function getXmtpClient() {
   const xmtp =
     globalForXmtp.xmtp ?? (await Client.create(signer, { env: "dev" }));
 
-  if (process.env.NODE_ENV !== "production") globalForXmtp.xmtp = xmtp;
+  globalForXmtp.xmtp = xmtp;
 
   xmtp.enableGroupChat();
 

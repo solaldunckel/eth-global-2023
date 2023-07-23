@@ -87,7 +87,7 @@ export default function Page({
         };
       }
     );
-    queryClient.invalidateQueries(["channel", params.id]);
+    queryClient.invalidateQueries(["channel", Number(params.id)]);
     form.reset();
   };
 
@@ -99,6 +99,8 @@ export default function Page({
         if (message.contentType.typeId !== "text") {
           continue;
         }
+
+        console.log("NEW MESSAGE");
 
         queryClient.invalidateQueries(["channel", params.id]);
       }
