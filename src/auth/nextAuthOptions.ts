@@ -32,6 +32,8 @@ const providers = [
 
       try {
         const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
+        console.log("siwe ok", siwe);
+
         const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
 
         console.log("next auth url", nextAuthUrl, process.env.NEXTAUTH_URL);
