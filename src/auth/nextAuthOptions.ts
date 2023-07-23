@@ -32,6 +32,8 @@ const providers = [
           nonce: await getCsrfToken({ req }),
         });
 
+        console.log("siwe", result, credentials, nextAuthUrl);
+
         if (result.success) {
           let user = await prisma.users.findUnique({
             where: {
@@ -43,6 +45,8 @@ const providers = [
             const { firstTxTimestamp, toAddr } = await getAddrInfo(
               siwe.address
             );
+
+            console.log("getaddr ok");
 
             try {
               user = await prisma.users.create({
