@@ -22,6 +22,8 @@ const providers = [
       },
     },
     async authorize(credentials, req) {
+      console.log("test", credentials, req);
+
       try {
         const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
         const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
