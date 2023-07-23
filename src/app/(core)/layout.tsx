@@ -1,6 +1,5 @@
 "use client";
 
-import CreateChannel from "@/components/CreateChannel";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { Button } from "@/components/ui/button";
 import { useXmtp } from "@/hooks/useXmtp";

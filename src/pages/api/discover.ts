@@ -29,7 +29,7 @@ export default async function handler(
       (el) => el.address === session.address
     )?.hasJoined
       ? "joined"
-      : checkAllowed(addrInfo, channel) // TO DO : channel category ?
+      : true // TO DO : channel category ?
       ? "allowed"
       : "denied";
     return {

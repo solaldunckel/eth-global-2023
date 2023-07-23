@@ -18,7 +18,7 @@ import type { Session } from "next-auth";
 
 const schema = z.object({
   username: z.string().optional(),
-  image: z.string().url().optional(),
+  image: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -30,7 +30,7 @@ const UpdateProfileForm: FC<{ session: Session | null }> = ({ session }) => {
     resolver: zodResolver(schema),
     defaultValues: {
       username: session?.user.username,
-      image: session?.user.image,
+      image: session?.user.image || undefined,
     },
   });
 

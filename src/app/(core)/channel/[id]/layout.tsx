@@ -12,7 +12,7 @@ export default function Layout({
   children: React.ReactNode;
   params: { id: string };
 }) {
-  const { data, isLoading } = useChannel(params.id);
+  const { data, isLoading } = useChannel(Number(params.id));
 
   console.log(data);
 
