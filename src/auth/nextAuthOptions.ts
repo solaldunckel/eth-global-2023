@@ -26,11 +26,18 @@ const providers = [
         const siwe = new SiweMessage(JSON.parse(credentials?.message || "{}"));
         const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
 
-        const result = await siwe.verify({
-          signature: credentials?.signature || "",
-          domain: nextAuthUrl.host,
-          nonce: await getCsrfToken({ req }),
-        });
+        console.log("next auth url", nextAuthUrl, process.env.NEXTAUTH_URL);
+        console.log("cred");
+        const result = await siwe
+          .verify({
+            signature: credentials?.signature || "",
+            domain: nextAuthUrl.host,
+            nonce: await getCsrfToken({ req }),
+          })
+          .catch((e) => {
+            console.log("catch", e);
+            throw new Error("Error verifying signature");
+          });
 
         console.log("siwe", result, credentials, nextAuthUrl);
 
