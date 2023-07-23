@@ -119,11 +119,9 @@ async function getNftHolders(tokenAddress: string, blockchain: string) {
 
     if (!data.TokenBalances.pageInfo.nextCursor) {
       end = true;
-      console.log(end);
     } else nextPage = data.TokenBalances.pageInfo.nextCursor;
-    console.log(data.TokenBalances.pageInfo.nextCursor);
-    console.log("coucou");
-    await sleep(2000);
+
+    await sleep(220);
   }
   return addresses;
 }

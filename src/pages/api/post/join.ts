@@ -25,6 +25,7 @@ export default async function handler(
     return res.status(401).json({ error: "Unauthorized" });
   }
 
+  console.log("here");
   const parsed = formSchema.safeParse(JSON.parse(req.body));
 
   if (!parsed.success) {

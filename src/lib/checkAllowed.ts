@@ -22,7 +22,10 @@ export async function checkAllowed(userAddress: string, channel: channel) {
         firstTxTimestamp: true,
       },
     });
-    if (user?.firstTxTimestamp! < parseInt(channel.condition)) {
+
+    if (
+      user?.firstTxTimestamp! < BigInt(new Date(channel.condition).getTime())
+    ) {
       return true;
     }
   } else if (channel.conditionType === "PROTOCOL") {
